@@ -1,0 +1,11 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "default_project",
+            "type": "ccs-debug",
+            "request": "launch",
+            "project": "default_project"
+        }
+    ]
+}
