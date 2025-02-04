@@ -18,7 +18,7 @@
 //-----------------------------------------------------------------------------
 // Loads standard C include files
 //-----------------------------------------------------------------------------
-#include <atomic>
+/*  #include <atomic> */
 #include <stdio.h>
 
 //-----------------------------------------------------------------------------
@@ -26,12 +26,13 @@
 //-----------------------------------------------------------------------------
 #include <ti/devices/msp/msp.h>
 #include "clock.h"
+#include "uart.h"
 
 
 //-----------------------------------------------------------------------------
 // Define function prototypes used by the program
 //-----------------------------------------------------------------------------
-
+void msp_printf(char* buffer, unsigned int value);
 
 //-----------------------------------------------------------------------------
 // Define symbolic constants used by the program
@@ -43,6 +44,35 @@
 // NOTE: when possible avoid using global variables
 //-----------------------------------------------------------------------------
 
+// ----------------------------------------------------------------------------
+// DESCRIPTION: 
+// This function formats an integer value into a string according to a given // format and sends the resulting string to a serial port. 
+//
+// INPUT PARAMETERS: 
+// buffer: A format string used to format the integer value. It follows the //format specifiers used by `sprintf`. 
+// value: The integer value to be formatted and included in the formatted //string. 
+//
+// OUTPUT PARAMETERS: 
+// none 
+//
+// RETURN: 
+// none 
+// ----------------------------------------------------------------------------
+
+void msp_printf(char* buffer, unsigned int value)
+{
+    unsigned int i=0;
+    unsigned int len = 0;
+    char string[80];
+
+    len = sprintf(string, buffer, value);
+
+    // Walk through arrya to send each character to serial port
+    for (i=0; i<len; i++)
+    {
+        UART_out_char(string[i]);
+    } /* for */
+} /* msp printf */
 
 // Define a structure to hold different data types
 typedef struct
@@ -85,8 +115,7 @@ lp_leds_init();
 UART_init(115200); 
 msp_printf("*** PROGRAM RUNNING ***\r\n\r\n",0); 
 msp_printf("CSC-202 MSPM0G3507 (ARM M0+) Data Type Tester\r\n",0); 
-msp_printf("-----
----\r\n",0); 
+msp_printf("-------------------------------------------\r\n",0); 
 msp_printf(" unsigned long int = 0x%x bytes\r\n", sizeof(struct_var.LA)); 
 msp_printf(" signed long int = 0x%x bytes\r\n", sizeof(struct_var.LB)); 
 msp_printf(" unsigned int 0x%x bytes\r\n", sizeof(struct_var.IA[0])); 
@@ -95,21 +124,25 @@ msp_printf("unsigned short int 0x%x bytes\r\n", sizeof(struct_var.SA[0]));
 msp_printf(" signed short int 0x%x bytes\r\n", sizeof(struct_var.SB [0])); 
 msp_printf(" unsigned char 0x%x bytes\r\n", sizeof(struct_var.CA[0])); 
 msp_printf(" signed char = 0x%x bytes\r\n", sizeof(struct_var.CB [0])); 
+
 msp_printf("\r\n",0); 
 msp_printf(" The structure = 0x%x bytes\r\n", sizeof(struct_var)); 
 msp_printf(" The union = 0x%x bytes\r\n", sizeof(union_var)); 
 msp_printf("\r\n",0); 
+
 msp_printf("Dumping data values from Union\r\n",0); 
-msp_printf("\r\n", 0); 
+msp_printf("---------------------------------------------\r\n", 0); 
 msp_printf(" union unsigned long int LA = 0x%X\r\n", union_var.LA); 
 msp_printf(" union signed long int LB 0x%X\r\n", union_var.LB); 
 msp_printf("\r\n",0); 
-msp_printf(" union unsigned int IA = 0x%X\r\n", union_var.IA); 
-msp_printf(" union signed int IB = 0x%X\r\n", union_var.IB); 
+
+msp_printf("union unsigned int IA = 0x%X\r\n", union_var.IA); 
+msp_printf("union signed int IB = 0x%X\r\n", union_var.IB); 
 msp_printf("\r\n",0);
  
- // Endless loop to prevent program from ending
- while (1);
+msp_printf(" *** PROGRAM TERMINATED ***\r\n",0);
+
+for(;;);
 
 } /* main */
 
