@@ -6,6 +6,15 @@
             "type": "ccs-debug",
             "request": "launch",
             "project": "default_project"
+        },
+        {
+            "name": "Lab2_p1",
+            "type": "ccs-debug",
+            "request": "launch",
+            "projectInfo": {
+                "name": "Lab2_p1",
+                "resourceId": "/Lab2_p1"
+            }
         }
     ]
 }
