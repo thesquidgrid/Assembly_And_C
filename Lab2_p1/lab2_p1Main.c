@@ -92,8 +92,8 @@ typedef union
 {
     unsigned long int LA;
     signed long int LB;
-    unsigned int IA[2];
-    signed int IB[2];
+    unsigned int IA;
+    signed int IB;
     unsigned short int SA[2];
     signed short int SB[2];
     unsigned char CA[4];
@@ -140,7 +140,26 @@ msp_printf("union unsigned int IA = 0x%X\r\n", union_var.IA);
 msp_printf("union signed int IB = 0x%X\r\n", union_var.IB); 
 msp_printf("\r\n",0);
  
+msp_printf("union unsigned short int SA[0] = 0x%X\r\n", union_var.SA[0]); 
+msp_printf(" union signed short int SB[0] = 0x%X\r\n", union_var.SB[0]); 
+msp_printf("union unsigned short int SA[1] = 0x%X\r\n", union_var.SA[1]); 
+msp_printf(" union signed short int SB[1] = 0x%X\r\n", union_var.SB[1]); 
+msp_printf("\r\n",0); 
+msp_printf(" union unsigned char CA[0] = 0x%X\r\n", union_var.CA[0]); 
+msp_printf(" union unsigned char CA [1] = 0x%X\r\n", union_var.CA[1]); 
+msp_printf(" union unsigned char CA[2] = 0x%X\r\n", union_var.CA[2]); 
+msp_printf(" union unsigned char CA[3] = 0x%X\r\n", union_var.CA[3]); 
+msp_printf("\r\n",0); 
+msp_printf(" union signed char CB[0] = 0x%X\r\n", union_var.CB[0]); 
+msp_printf(" union signed char CB[1] = 0x%X\r\n", union_var.CB[1]); 
+msp_printf(" union signed char CB [2] = 0x%X\r\n", union_var.CB [2]); 
+msp_printf(" union signed char CB[3] = 0x%X\r\n", union_var.CB [3]); 
+msp_printf("\r\n",0); 
+msp_printf("\r\n",0); 
+
 msp_printf(" *** PROGRAM TERMINATED ***\r\n",0);
+
+
 
 for(;;);
 
