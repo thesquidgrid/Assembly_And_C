@@ -8,13 +8,15 @@
             "project": "default_project"
         },
         {
-            "name": "Lab2_p1",
+            "name": "Lab2_p1 (1)",
+            "type": "ccs-debug",
+            "request": "launch"
+        },
+        {
+            "name": "Lab2_p1b",
             "type": "ccs-debug",
             "request": "launch",
-            "projectInfo": {
-                "name": "Lab2_p1",
-                "resourceId": "/Lab2_p1"
-            }
+            "project": "Lab2_p1b"
         }
     ]
 }
