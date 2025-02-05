@@ -26,6 +26,7 @@
 //-----------------------------------------------------------------------------
 #include <ti/devices/msp/msp.h>
 #include "clock.h"
+#include "LaunchPad.h"
 #include "uart.h"
 
 
