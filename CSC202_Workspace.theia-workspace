@@ -10,5 +10,16 @@
       "path": "Lab2_p1b"
     }
   ],
-  "settings": {}
+"settings": {},
+"launch": {
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Lab2_p1b",
+            "type": "ccs-debug",
+            "request": "launch",
+            "project": "Lab2_p1b"
+        }
+    ]
+}
 }

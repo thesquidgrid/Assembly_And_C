@@ -109,7 +109,7 @@ int main(void)
 test_struct struct_var; 
 union_32 union_var; 
 // Initialize long integer 
-union_var.LA = 0x12345678; 
+union_var.LA = 0xABCD1234; 
 clock_init_40mhz(); 
 launchpad_gpio_init(); 
 lp_leds_init(); 
@@ -155,6 +155,7 @@ msp_printf(" union signed char CB[0] = 0x%X\r\n", union_var.CB[0]);
 msp_printf(" union signed char CB[1] = 0x%X\r\n", union_var.CB[1]); 
 msp_printf(" union signed char CB [2] = 0x%X\r\n", union_var.CB [2]); 
 msp_printf(" union signed char CB[3] = 0x%X\r\n", union_var.CB [3]); 
+
 msp_printf("\r\n",0); 
 msp_printf("\r\n",0); 
 
