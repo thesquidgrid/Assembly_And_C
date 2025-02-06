@@ -1,17 +1,18 @@
 //*****************************************************************************
 //*****************************    C Source Code    ***************************
 //*****************************************************************************
-//  DESIGNER NAME:  TBD
+//  DESIGNER NAME:  Bruce Link
 //
-//       LAB NAME:  TBD
+//       LAB NAME:  Lab 2
 //
-//      FILE NAME:  main.c
+//      FILE NAME:  Lab2_p1b.c
 //
 //-----------------------------------------------------------------------------
 //
 // DESCRIPTION:
-//    I credit Amy winehouse for this win :)
-//
+//    Displays the amount of space each data type (both signed and unsigned)
+//    take up, as well as display how each data type could store a 32 bit value
+//    despite not being 32 bits.
 //*****************************************************************************
 //*****************************************************************************
 
