@@ -160,8 +160,8 @@ int main(void)
   msp_printf("PROBLEM 4: Setting A[3:0] bits\r\n", 0);
 
   // enter your code here for problem 4
-  uint16_t bitMask = (A0_BIT | A1_BIT | A2_BIT | A3_BIT);
-  test_reg16 = set_bit(test_reg16, A6_BIT);
+  uint16_t bitMask = (A15_BIT | A14_BIT | A13_BIT | A12_BIT);
+  test_reg16 = set_bit(test_reg16, bitMask);
   msp_printf("    --> Test reg = 0x%04X\r\n", test_reg16);
   msp_printf("\r\n",0);
 
@@ -174,21 +174,25 @@ int main(void)
   msp_printf("PROBLEM 5: Testing bit A2\r\n", 0);
 
   // enter your code here for problem 5
-
+  if(check_bit(test_reg16,A2_BIT)==true){
+        msp_printf("Bit A2 is 1\r\n",0);
+  } else{
+        msp_printf("Bit A2 is 0\r\n",0);
+  }
   msp_printf("\r\n",0);
 
-  /**/
+  
   // ***************************************************************************
   // PROBLEM 6: Clear A2 bit in test register
   // ***************************************************************************
   msp_printf("PROBLEM 6: Clearing A[2] bit\r\n", 0);
 
   // enter your code here for problem 6
-
+  test_reg16 = clear_bit(test_reg16, A14_BIT);
   msp_printf("    --> Test reg = 0x%04X\r\n", test_reg16);
   msp_printf("\r\n",0);
 
-
+/*
   // ***************************************************************************
   // PROBLEM 7: Clear CRS bits and set PRS bits in test register
   // ***************************************************************************
@@ -297,7 +301,8 @@ uint16_t set_bit(uint16_t reg_value, uint16_t bit_mask)
 uint16_t clear_bit(uint16_t reg_value, uint16_t bit_mask)
 {
     bit_mask = ~bit_mask; //1's compliment on mask
-    return reg_value = reg_value & bit_mask; //will always be zero is the bit_mask is 0.
+    uint16_t returnVal = reg_value & bit_mask; //will always be zero is the bit_mask is 0.
+    return returnVal;
 
 }
 
