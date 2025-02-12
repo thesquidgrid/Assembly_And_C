@@ -45,7 +45,7 @@
 // Define function prototypes used by the program
 //-----------------------------------------------------------
 
-uint16_t my_asm_16bitset (uint16_t reg_value, uint16_t bit_mask); 
+uint16_t my_asm_16bitset(uint16_t reg_value, uint16_t bit_mask); 
 uint16_t my_asm_16bittclr(uint16_t reg_value, uint16_t bit_mask);
 uint16_t my_asm_16bitcheck(uint16_t reg_value, uint16_t bit_mask);
 
@@ -83,6 +83,7 @@ void msp_printf(char* buffer, unsigned int value) //output to serial console
 #define RD_BIT_MASK                  (1 << 2)
 #define EME_BIT_MASK                 (1 << 1)
 #define PIE_BIT_MASK                 (1 << 0)
+#define A0_to_A3_BIT_MASK            (15 << 12)
 
 
 //-----------------------------------------------------------------------------
@@ -115,40 +116,40 @@ int main(void)
   msp_printf("The starting value of test reg is 0x%04X\r\n", test_reg16);
   msp_printf("\r\n",0);
 
-   /*
+   
   // ***************************************************************************
   // PROBLEM 1: Set the PIE bit in test register (test_reg16)
   // ***************************************************************************
   msp_printf("PROBLEM 1: Setting PIE bit\r\n", 0);
-
+  test_reg16 = my_asm_16bitset(test_reg16, PIE_BIT_MASK); 
   // enter your code here for problem 1
 
   msp_printf("    --> Test reg = 0x%04X\r\n", test_reg16);
   msp_printf("\r\n",0);
 
-
+  
   // ***************************************************************************
   // PROBLEM 2: Set the RD bit in test register
   // ***************************************************************************
   msp_printf("PROBLEM 2: Setting RD bit\r\n", 0);
 
-  // enter your code here for problem 2
+  test_reg16 = my_asm_16bitset(test_reg16, RD_BIT_MASK); 
 
   msp_printf("    --> Test reg = 0x%04X\r\n", test_reg16);
   msp_printf("\r\n",0);
 
-
+   
   // ***************************************************************************
   // PROBLEM 3: Set the CRS bits in test register
   // ***************************************************************************
   msp_printf("PROBLEM 3: Setting CRS bits\r\n", 0);
 
   // enter your code here for problem 3
-
+  test_reg16 = my_asm_16bitset(test_reg16, CRS_BIT_MASK); 
   msp_printf("    --> Test reg = 0x%04X\r\n", test_reg16);
   msp_printf("\r\n",0);
 
-
+    
   // ***************************************************************************
   // PROBLEM 4: Set the A[3:0] bits in test register
   // ***************************************************************************
@@ -156,10 +157,11 @@ int main(void)
 
   // enter your code here for problem 4
 
+  test_reg16 = my_asm_16bitset(test_reg16, A0_to_A3_BIT_MASK); 
   msp_printf("    --> Test reg = 0x%04X\r\n", test_reg16);
   msp_printf("\r\n",0);
 
-
+   /*
   // ***************************************************************************
   // PROBLEM 5: Use an IF statement to test it A2 bit is set
   //            if A2 = 1 then print "Bit A2 is 1"
