@@ -44,7 +44,11 @@
 //-----------------------------------------------------------
 // Define function prototypes used by the program
 //-----------------------------------------------------------
-void msp_printf(char* buffer, unsigned int value)
+uint16_t set_bit(uint16_t reg_value, uint16_t bit_mask); //set_bit
+bool check_bit(uint16_t reg_value, uint16_t bit_mask); //check bit
+uint16_t clear_bit(uint16_t reg_value, uint16_t bit_mask); //Clear_bit
+
+void msp_printf(char* buffer, unsigned int value) //output to serial console
 {
     unsigned int i=0;
     unsigned int len = 0;
@@ -63,6 +67,23 @@ void msp_printf(char* buffer, unsigned int value)
 //-----------------------------------------------------------------------------
 // Define symbolic constants used by program
 //-----------------------------------------------------------------------------
+
+#define A0_BIT  0x0001 // PIE
+#define A1_BIT  0x0002 // EME
+#define A2_BIT  0x0004 // RD
+#define A3_BIT  0x0008 // MD
+#define A4_BIT  0x0010 // CRS
+#define A5_BIT  0x0020 // CRS
+#define A6_BIT  0x0040 // CRS
+#define A7_BIT  0x0080 // MODE
+#define A8_BIT  0x0100 // MODE
+#define A9_BIT  0x0200 // PRS
+#define A10_BIT 0x0400 // PRS
+#define A11_BIT 0x0800 // PRS 
+#define A12_BIT 0x1000 // A0
+#define A13_BIT 0x2000 // A1
+#define A14_BIT 0x4000 // A2
+#define A15_BIT 0x8000 // A3
 
 
 
@@ -96,14 +117,15 @@ int main(void)
   msp_printf("The starting value of test reg is 0x%04X\r\n", test_reg16);
   msp_printf("\r\n",0);
 
-/*
+
   // ***************************************************************************
   // PROBLEM 1: Set the PIE bit in test register (test_reg16)
   // ***************************************************************************
   msp_printf("PROBLEM 1: Setting PIE bit\r\n", 0);
 
   // enter your code here for problem 1
-
+  test_reg16 = set_bit(test_reg16, A0_BIT);
+  //A15_BIT = test_reg16;
   msp_printf("    --> Test reg = 0x%04X\r\n", test_reg16);
   msp_printf("\r\n",0);
 
@@ -114,7 +136,7 @@ int main(void)
   msp_printf("PROBLEM 2: Setting RD bit\r\n", 0);
 
   // enter your code here for problem 2
-
+  test_reg16 = set_bit(test_reg16, A2_BIT);
   msp_printf("    --> Test reg = 0x%04X\r\n", test_reg16);
   msp_printf("\r\n",0);
 
@@ -125,7 +147,9 @@ int main(void)
   msp_printf("PROBLEM 3: Setting CRS bits\r\n", 0);
 
   // enter your code here for problem 3
-
+  test_reg16 = set_bit(test_reg16, A4_BIT);
+  test_reg16 = set_bit(test_reg16, A5_BIT);
+  test_reg16 = set_bit(test_reg16, A6_BIT);
   msp_printf("    --> Test reg = 0x%04X\r\n", test_reg16);
   msp_printf("\r\n",0);
 
@@ -136,11 +160,12 @@ int main(void)
   msp_printf("PROBLEM 4: Setting A[3:0] bits\r\n", 0);
 
   // enter your code here for problem 4
-
+  uint16_t bitMask = (A0_BIT | A1_BIT | A2_BIT | A3_BIT);
+  test_reg16 = set_bit(test_reg16, A6_BIT);
   msp_printf("    --> Test reg = 0x%04X\r\n", test_reg16);
   msp_printf("\r\n",0);
 
-
+  
   // ***************************************************************************
   // PROBLEM 5: Use an IF statement to test it A2 bit is set
   //            if A2 = 1 then print "Bit A2 is 1"
@@ -152,7 +177,7 @@ int main(void)
 
   msp_printf("\r\n",0);
 
-
+  /**/
   // ***************************************************************************
   // PROBLEM 6: Clear A2 bit in test register
   // ***************************************************************************
@@ -244,6 +269,12 @@ int main(void)
 //  uint16_t - The modified register value with the specified bit(s) set.
 // -----------------------------------------------------------------------------
 
+uint16_t set_bit(uint16_t reg_value, uint16_t bit_mask)
+{
+    uint16_t returnval;
+    returnval = reg_value | bit_mask;
+    return returnval;
+}
 
 
 //-----------------------------------------------------------------------------
@@ -263,7 +294,12 @@ int main(void)
 //  uint16_t - The modified register value with the specified bit(s) cleared.
 // -----------------------------------------------------------------------------
 
+uint16_t clear_bit(uint16_t reg_value, uint16_t bit_mask)
+{
+    bit_mask = ~bit_mask; //1's compliment on mask
+    return reg_value = reg_value & bit_mask; //will always be zero is the bit_mask is 0.
 
+}
 
 //-----------------------------------------------------------------------------
 // DESCRIPTION:
@@ -282,3 +318,12 @@ int main(void)
 //  bool - true if the specified bit(s) are set, false otherwise.
 // -----------------------------------------------------------------------------
 
+bool check_bit(uint16_t reg_value, uint16_t bit_mask){
+
+    if((reg_value & bit_mask) == bit_mask)
+    {
+        return true;
+    } else{
+        return false;
+    }
+}
