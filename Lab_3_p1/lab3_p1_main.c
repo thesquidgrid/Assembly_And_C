@@ -44,25 +44,26 @@
 //-----------------------------------------------------------
 // Define function prototypes used by the program
 //-----------------------------------------------------------
-void msp_printf(char* buffer, unsigned int value);
+void msp_printf(char* buffer, unsigned int value)
+{
+    unsigned int i=0;
+    unsigned int len = 0;
+    char string[80];
+
+    len = sprintf(string, buffer, value);
+
+    // Walk through arrya to send each character to serial port
+    for (i=0; i<len; i++)
+    {
+        UART_out_char(string[i]);
+    } /* for */
+} /* msp printf */
 
 
 //-----------------------------------------------------------------------------
 // Define symbolic constants used by program
 //-----------------------------------------------------------------------------
-#define A3_BIT                 (0 << 15)
-#define A2_BIT                 (0 << 14)
-#define A1_BIT                 (0 << 13)
-#define A0_BIT                 (0 << 12)
-#define PRS_BIT                (0 << 9)
-#define MODE_BIT               (0 << 7)
-#define MODE_10                (0 << 7)
-#define MODE_01                (0 << 7)
-#define CRS_BIT                (0 << 4)
-#define MD_BIT                 (0 << 3)
-#define RD_BIT                 (0 << 2)
-#define EME_BIT                (0 << 1)
-#define PIE_BIT                (0 << 0)
+
 
 
 //-----------------------------------------------------------------------------
@@ -95,7 +96,7 @@ int main(void)
   msp_printf("The starting value of test reg is 0x%04X\r\n", test_reg16);
   msp_printf("\r\n",0);
 
-
+/*
   // ***************************************************************************
   // PROBLEM 1: Set the PIE bit in test register (test_reg16)
   // ***************************************************************************
@@ -223,7 +224,7 @@ int main(void)
   msp_printf(" *** PROGRAM TERMINATED ***\r\n",0);
   
   for(;;);
-
+*/
 } /* main */
 
 
