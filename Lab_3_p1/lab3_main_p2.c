@@ -46,7 +46,7 @@
 //-----------------------------------------------------------
 
 uint16_t my_asm_16bitset(uint16_t reg_value, uint16_t bit_mask); 
-uint16_t my_asm_16bittclr(uint16_t reg_value, uint16_t bit_mask);
+uint16_t my_asm_16bitclr(uint16_t reg_value, uint16_t bit_mask);
 uint16_t my_asm_16bitcheck(uint16_t reg_value, uint16_t bit_mask);
 
 void msp_printf(char* buffer, unsigned int value) //output to serial console
@@ -161,7 +161,7 @@ int main(void)
   msp_printf("    --> Test reg = 0x%04X\r\n", test_reg16);
   msp_printf("\r\n",0);
 
-   /*
+   
   // ***************************************************************************
   // PROBLEM 5: Use an IF statement to test it A2 bit is set
   //            if A2 = 1 then print "Bit A2 is 1"
@@ -169,33 +169,41 @@ int main(void)
   // ***************************************************************************
   msp_printf("PROBLEM 5: Testing bit A2\r\n", 0);
 
-  // enter your code here for problem 5
+   if(my_asm_16bitcheck(test_reg16,A2_BIT_MASK)==1){
+        msp_printf("Bit A2 is 1\r\n",0);
+  } else{
+        msp_printf("Bit A2 is 0\r\n",0);
+  }
+  msp_printf("\r\n",0);
 
   msp_printf("\r\n",0);
 
-
+  
   // ***************************************************************************
   // PROBLEM 6: Clear A2 bit in test register
   // ***************************************************************************
   msp_printf("PROBLEM 6: Clearing A[2] bit\r\n", 0);
 
   // enter your code here for problem 6
-
+  test_reg16 = my_asm_16bitclr(test_reg16, A2_BIT_MASK);
   msp_printf("    --> Test reg = 0x%04X\r\n", test_reg16);
   msp_printf("\r\n",0);
 
-
+ 
   // ***************************************************************************
   // PROBLEM 7: Clear CRS bits and set PRS bits in test register
   // ***************************************************************************
   msp_printf("PROBLEM 7: Clear CRS bits and set PRS bits\r\n", 0);
 
   // enter your code here for problem 7
+  test_reg16 = my_asm_16bitclr(test_reg16, CRS_BIT_MASK);
+  test_reg16 = my_asm_16bitset(test_reg16, PRS_BIT_MASK);
+
 
   msp_printf("    --> Test reg = 0x%04X\r\n", test_reg16);
   msp_printf("\r\n",0);
 
-
+  
   // ***************************************************************************
   // PROBLEM 8: Use an IF statement to test if A2 is set
   //            if A2 = 1 then
@@ -208,11 +216,19 @@ int main(void)
   msp_printf("PROBLEM 8: Testing bit A2\r\n", 0);
 
   // enter your code here for problem 8
-
+ if(my_asm_16bitcheck(test_reg16,A2_BIT_MASK)==1){
+        msp_printf("Bit A2=1 so clearing it\r\n",0);
+        test_reg16 = my_asm_16bitclr(test_reg16, A2_BIT_MASK);
+        
+   } else{
+        msp_printf("Bit A2=0 so setting it\r\n",0);
+        test_reg16 = my_asm_16bitset(test_reg16, A2_BIT_MASK);
+   }
+  msp_printf("\r\n",0);
   msp_printf("    --> Test reg = 0x%04X\r\n", test_reg16);
   msp_printf("\r\n",0);
 
-
+  
   // ***************************************************************************
   // PROBLEM 9: Use an IF statement to test it MD is 0
   //            if MD = 0 then
@@ -228,7 +244,19 @@ int main(void)
 
   msp_printf("    --> Test reg = 0x%04X\r\n", test_reg16);
   msp_printf("\r\n",0);
+  
+  if(my_asm_16bitcheck(test_reg16,MD_BIT_MASK)==0){
+        msp_printf("Bit MD=0, setting mode=10\r\n",0);
+        test_reg16 = my_asm_16bitset(test_reg16, MODE_10_BIT_VALUE);
+        test_reg16 = my_asm_16bitclr(test_reg16, MODE_01_BIT_VALUE);
+   } else{
+        msp_printf("Bit MD=1, setting mode=11",0);
+        test_reg16 = my_asm_16bitset( test_reg16, MODE_10_BIT_VALUE);
+        test_reg16 = my_asm_16bitset( test_reg16, MODE_01_BIT_VALUE);
 
+   }
+
+   msp_printf("    --> Test reg = 0x%04X\r\n", test_reg16);
 
   // ***************************************************************************
   // PROBLEM 10: Clear all bits in test register
@@ -237,13 +265,14 @@ int main(void)
 
   // enter your code here for problem 10
 
+  test_reg16 = my_asm_16bitclr(test_reg16, 0xFFFF);
   msp_printf("    --> Test reg = 0x%04X\r\n", test_reg16);
   msp_printf("\r\n",0);
 
 
   msp_printf(" *** PROGRAM TERMINATED ***\r\n",0);
   
-*/
+
 while(1);
 } /* main */
 
