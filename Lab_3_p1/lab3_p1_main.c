@@ -187,23 +187,25 @@ int main(void)
   // ***************************************************************************
   msp_printf("PROBLEM 6: Clearing A[2] bit\r\n", 0);
 
-  // enter your code here for problem 6
   test_reg16 = clear_bit(test_reg16, A14_BIT);
   msp_printf("    --> Test reg = 0x%04X\r\n", test_reg16);
   msp_printf("\r\n",0);
 
-/*
+
   // ***************************************************************************
   // PROBLEM 7: Clear CRS bits and set PRS bits in test register
   // ***************************************************************************
   msp_printf("PROBLEM 7: Clear CRS bits and set PRS bits\r\n", 0);
+   
+   uint16_t CRS_bitMask = (A4_BIT | A5_BIT | A6_BIT);
+   uint16_t PRS_bitMask = (A9_BIT | A10_BIT | A11_BIT);
 
-  // enter your code here for problem 7
+   test_reg16 = clear_bit(test_reg16, CRS_bitMask);
+   test_reg16 = set_bit(test_reg16, PRS_bitMask);
+   msp_printf("    --> Test reg = 0x%04X\r\n", test_reg16);
+   msp_printf("\r\n",0);
 
-  msp_printf("    --> Test reg = 0x%04X\r\n", test_reg16);
-  msp_printf("\r\n",0);
-
-
+  
   // ***************************************************************************
   // PROBLEM 8: Use an IF statement to test if A2 is set
   //            if A2 = 1 then
@@ -215,7 +217,13 @@ int main(void)
   // ***************************************************************************
   msp_printf("PROBLEM 8: Testing bit A2\r\n", 0);
 
-  // enter your code here for problem 8
+   if(check_bit(test_reg16,A14_BIT)==true){
+        msp_printf("Bit A2=1 so clearing it\r\n",0);
+        test_reg16 = clear_bit(test_reg16, A14_BIT);
+   } else{
+        msp_printf("Bit A2=0 so setting it\r\n",0);
+        test_reg16 = set_bit(test_reg16, A14_BIT);
+   }
   
   msp_printf("    --> Test reg = 0x%04X\r\n", test_reg16);
   msp_printf("\r\n",0);
@@ -233,12 +241,20 @@ int main(void)
   msp_printf("PROBLEM 9: Testing bit MD & setting mode bits\r\n", 0);
 
   // enter your code here for problem 9
-
+    if(check_bit(test_reg16,A3_BIT)==false){
+        msp_printf("Bit MD=0, setting mode=10\r\n",0);
+        unsigned short mode10Mask = 0x0100; //bitmask in hex for MODE 10
+        test_reg16 = set_bit(reg_value, mode10Mask);
+   } else{
+        msp_printf("Bit MD=1, setting mode=11",0);
+        unsigned short mode11Mask = 0x0180; //bitmask in hex for MODE 11
+        test_reg16 = set_bit( reg_value, mode11Mask);
+   }
 
   msp_printf("    --> Test reg = 0x%04X\r\n", test_reg16);
   msp_printf("\r\n",0);
 
-
+  /*
   // ***************************************************************************
   // PROBLEM 10: Clear all bits in test register
   // ***************************************************************************
@@ -301,7 +317,10 @@ uint16_t set_bit(uint16_t reg_value, uint16_t bit_mask)
 uint16_t clear_bit(uint16_t reg_value, uint16_t bit_mask)
 {
     bit_mask = ~bit_mask; //1's compliment on mask
+    msp_printf("    --> bitmask = 0x%04X\r\n", bit_mask);
+    
     uint16_t returnVal = reg_value & bit_mask; //will always be zero is the bit_mask is 0.
+    msp_printf("    --> returnVal = 0x%04X\r\n", returnVal);
     return returnVal;
 
 }
