@@ -64,6 +64,8 @@ void msp_printf(char* buffer, unsigned int value) //output to serial console
 } /* msp printf */
 
 
+
+
 //-----------------------------------------------------------------------------
 // Define symbolic constants used by program
 //-----------------------------------------------------------------------------
@@ -220,11 +222,12 @@ int main(void)
    if(check_bit(test_reg16,A14_BIT)==true){
         msp_printf("Bit A2=1 so clearing it\r\n",0);
         test_reg16 = clear_bit(test_reg16, A14_BIT);
+        
    } else{
         msp_printf("Bit A2=0 so setting it\r\n",0);
         test_reg16 = set_bit(test_reg16, A14_BIT);
    }
-  
+  unsigned long debug = test_reg16;
   msp_printf("    --> Test reg = 0x%04X\r\n", test_reg16);
   msp_printf("\r\n",0);
 
@@ -243,33 +246,34 @@ int main(void)
   // enter your code here for problem 9
     if(check_bit(test_reg16,A3_BIT)==false){
         msp_printf("Bit MD=0, setting mode=10\r\n",0);
-        unsigned short mode10Mask = 0x0100; //bitmask in hex for MODE 10
-        test_reg16 = set_bit(reg_value, mode10Mask);
+        msp_printf("    --> Test reg = 0x%04X\r\n", test_reg16);
+        test_reg16 = set_bit(test_reg16, A8_BIT);
+        test_reg16 = clear_bit(test_reg16, A7_BIT);
    } else{
         msp_printf("Bit MD=1, setting mode=11",0);
-        unsigned short mode11Mask = 0x0180; //bitmask in hex for MODE 11
-        test_reg16 = set_bit( reg_value, mode11Mask);
+        test_reg16 = set_bit( test_reg16, A8_BIT);
+        test_reg16 = set_bit( test_reg16, A7_BIT);
+
    }
 
   msp_printf("    --> Test reg = 0x%04X\r\n", test_reg16);
   msp_printf("\r\n",0);
 
-  /*
+  
   // ***************************************************************************
   // PROBLEM 10: Clear all bits in test register
   // ***************************************************************************
   msp_printf("PROBLEM 10: Clearing all bits\r\n", 0);
 
-  // enter your code here for problem 10
-
+  
+  test_reg16 = clear_bit(test_reg16, 0xFFFF);
   msp_printf("    --> Test reg = 0x%04X\r\n", test_reg16);
   msp_printf("\r\n",0);
-
-
   msp_printf(" *** PROGRAM TERMINATED ***\r\n",0);
   
   for(;;);
-*/
+
+while(1);
 } /* main */
 
 
@@ -316,11 +320,8 @@ uint16_t set_bit(uint16_t reg_value, uint16_t bit_mask)
 
 uint16_t clear_bit(uint16_t reg_value, uint16_t bit_mask)
 {
-    bit_mask = ~bit_mask; //1's compliment on mask
-    msp_printf("    --> bitmask = 0x%04X\r\n", bit_mask);
-    
+    bit_mask = ~bit_mask; //1's compliment on mask    
     uint16_t returnVal = reg_value & bit_mask; //will always be zero is the bit_mask is 0.
-    msp_printf("    --> returnVal = 0x%04X\r\n", returnVal);
     return returnVal;
 
 }
