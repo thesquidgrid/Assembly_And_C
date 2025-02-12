@@ -6,7 +6,7 @@
 //
 //       LAB NAME:  Lab 3, part 1
 //
-//      FILE NAME:  TBD.c
+//      FILE NAME:  lab3_main_p1.c
 //
 //-----------------------------------------------------------------------------
 //
@@ -50,7 +50,19 @@ void msp_printf(char* buffer, unsigned int value);
 //-----------------------------------------------------------------------------
 // Define symbolic constants used by program
 //-----------------------------------------------------------------------------
-
+#define A3_BIT                 (0 << 15)
+#define A2_BIT                 (0 << 14)
+#define A1_BIT                 (0 << 13)
+#define A0_BIT                 (0 << 12)
+#define PRS_BIT                (0 << 9)
+#define MODE_BIT               (0 << 7)
+#define MODE_10                (0 << 7)
+#define MODE_01                (0 << 7)
+#define CRS_BIT                (0 << 4)
+#define MD_BIT                 (0 << 3)
+#define RD_BIT                 (0 << 2)
+#define EME_BIT                (0 << 1)
+#define PIE_BIT                (0 << 0)
 
 
 //-----------------------------------------------------------------------------
