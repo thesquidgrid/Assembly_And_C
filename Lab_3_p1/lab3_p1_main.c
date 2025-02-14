@@ -2,7 +2,7 @@
 //*****************************    C Source Code    ***************************
 //*****************************************************************************
 //
-//  DESIGNER NAME:  TBD
+//  DESIGNER NAME:  Sophia Buchman
 //
 //       LAB NAME:  Lab 3, part 1
 //
@@ -47,21 +47,7 @@
 uint16_t set_bit(uint16_t reg_value, uint16_t bit_mask); //set_bit
 bool check_bit(uint16_t reg_value, uint16_t bit_mask); //check bit
 uint16_t clear_bit(uint16_t reg_value, uint16_t bit_mask); //Clear_bit
-
-void msp_printf(char* buffer, unsigned int value) //output to serial console
-{
-    unsigned int i=0;
-    unsigned int len = 0;
-    char string[80];
-
-    len = sprintf(string, buffer, value);
-
-    // Walk through arrya to send each character to serial port
-    for (i=0; i<len; i++)
-    {
-        UART_out_char(string[i]);
-    } /* for */
-} /* msp printf */
+void msp_printf(char* buffer, unsigned int value); //printout
 
 
 
@@ -352,3 +338,21 @@ bool check_bit(uint16_t reg_value, uint16_t bit_mask){
         return false;
     }
 }
+
+
+
+
+void msp_printf(char* buffer, unsigned int value) //output to serial console
+{
+    unsigned int i=0;
+    unsigned int len = 0;
+    char string[80];
+
+    len = sprintf(string, buffer, value);
+
+    // Walk through arrya to send each character to serial port
+    for (i=0; i<len; i++)
+    {
+        UART_out_char(string[i]);
+    } /* for */
+} /* msp printf */
