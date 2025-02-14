@@ -340,6 +340,23 @@ bool check_bit(uint16_t reg_value, uint16_t bit_mask){
 }
 
 
+//-----------------------------------------------------------------------------
+// DESCRIPTION:
+//  This function formats a string with a specified value and sends the formatted 
+//  string character by character to a serial console via UART. The string is 
+//  created using the provided format buffer and value, and each character of 
+//  the string is transmitted using the UART_out_char function.
+//
+// INPUT PARAMETERS:
+//  buffer   - a pointer to a format string that specifies how to format the value.
+//  value    - the unsigned integer value that will be inserted into the format string.
+//
+// OUTPUT PARAMETERS:
+//  none
+//
+// RETURN:
+//  none
+// -----------------------------------------------------------------------------
 
 
 void msp_printf(char* buffer, unsigned int value) //output to serial console
