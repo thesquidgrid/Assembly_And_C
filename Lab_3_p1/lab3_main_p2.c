@@ -256,11 +256,24 @@ while(1);
 } /* main */
 
 
-/*
-*Name: msp_printf
-*Returns: nothing 
-*Description: prints out to console
-*/
+//-----------------------------------------------------------------------------
+// DESCRIPTION:
+//  This function formats a string with a specified value and sends the formatted 
+//  string character by character to a serial console via UART. The string is 
+//  created using the provided format buffer and value, and each character of 
+//  the string is transmitted using the UART_out_char function.
+//
+// INPUT PARAMETERS:
+//  buffer   - a pointer to a format string that specifies how to format the value.
+//  value    - the unsigned integer value that will be inserted into the format string.
+//
+// OUTPUT PARAMETERS:
+//  none
+//
+// RETURN:
+//  none
+// -----------------------------------------------------------------------------
+
     
 void msp_printf(char* buffer, unsigned int value) //output to serial console
 {
