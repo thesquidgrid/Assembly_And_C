@@ -48,21 +48,7 @@
 uint16_t my_asm_16bitset(uint16_t reg_value, uint16_t bit_mask); 
 uint16_t my_asm_16bitclr(uint16_t reg_value, uint16_t bit_mask);
 uint16_t my_asm_16bitcheck(uint16_t reg_value, uint16_t bit_mask);
-
-void msp_printf(char* buffer, unsigned int value) //output to serial console
-{
-    unsigned int i=0;
-    unsigned int len = 0;
-    char string[80];
-
-    len = sprintf(string, buffer, value);
-
-    // Walk through arrya to send each character to serial port
-    for (i=0; i<len; i++)
-    {
-        UART_out_char(string[i]);
-    } /* for */
-} /* msp printf */
+void msp_printf(char* buffer, unsigned int value);
 
 //-----------------------------------------------------------------------------
 // Define symbolic constants used by program
@@ -122,7 +108,6 @@ int main(void)
   // ***************************************************************************
   msp_printf("PROBLEM 1: Setting PIE bit\r\n", 0);
   test_reg16 = my_asm_16bitset(test_reg16, PIE_BIT_MASK); 
-  // enter your code here for problem 1
 
   msp_printf("    --> Test reg = 0x%04X\r\n", test_reg16);
   msp_printf("\r\n",0);
@@ -155,7 +140,6 @@ int main(void)
   // ***************************************************************************
   msp_printf("PROBLEM 4: Setting A[3:0] bits\r\n", 0);
 
-  // enter your code here for problem 4
 
   test_reg16 = my_asm_16bitset(test_reg16, A0_to_A3_BIT_MASK); 
   msp_printf("    --> Test reg = 0x%04X\r\n", test_reg16);
@@ -184,7 +168,6 @@ int main(void)
   // ***************************************************************************
   msp_printf("PROBLEM 6: Clearing A[2] bit\r\n", 0);
 
-  // enter your code here for problem 6
   test_reg16 = my_asm_16bitclr(test_reg16, A2_BIT_MASK);
   msp_printf("    --> Test reg = 0x%04X\r\n", test_reg16);
   msp_printf("\r\n",0);
@@ -195,7 +178,6 @@ int main(void)
   // ***************************************************************************
   msp_printf("PROBLEM 7: Clear CRS bits and set PRS bits\r\n", 0);
 
-  // enter your code here for problem 7
   test_reg16 = my_asm_16bitclr(test_reg16, CRS_BIT_MASK);
   test_reg16 = my_asm_16bitset(test_reg16, PRS_BIT_MASK);
 
@@ -215,7 +197,6 @@ int main(void)
   // ***************************************************************************
   msp_printf("PROBLEM 8: Testing bit A2\r\n", 0);
 
-  // enter your code here for problem 8
  if(my_asm_16bitcheck(test_reg16,A2_BIT_MASK)==1){
         msp_printf("Bit A2=1 so clearing it\r\n",0);
         test_reg16 = my_asm_16bitclr(test_reg16, A2_BIT_MASK);
@@ -239,8 +220,6 @@ int main(void)
   //                set MODE to 11
   // ***************************************************************************
   msp_printf("PROBLEM 9: Testing bit MD & setting mode bits\r\n", 0);
-
-  // enter your code here for problem 9
 
   msp_printf("    --> Test reg = 0x%04X\r\n", test_reg16);
   msp_printf("\r\n",0);
@@ -275,5 +254,27 @@ int main(void)
 
 while(1);
 } /* main */
+
+
+/*
+*Name: msp_printf
+*Returns: nothing 
+*Description: prints out to console
+*/
+    
+void msp_printf(char* buffer, unsigned int value) //output to serial console
+{
+    unsigned int i=0;
+    unsigned int len = 0;
+    char string[80];
+
+    len = sprintf(string, buffer, value);
+
+    // Walk through arrya to send each character to serial port
+    for (i=0; i<len; i++)
+    {
+        UART_out_char(string[i]);
+    } /* for */
+} /* msp printf */
 
 
