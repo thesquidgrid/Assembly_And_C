@@ -2,10 +2,10 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "default_project",
+            "name": "lab4",
             "type": "ccs-debug",
             "request": "launch",
-            "project": "default_project"
+            "project": "lab4"
         },
         {
             "name": "Lab2_p1 (1)",
