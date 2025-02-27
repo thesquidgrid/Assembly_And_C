@@ -71,7 +71,7 @@ int seg7_digit = 0;
 int main(void)
 {
 clock_init_40mhz();
-led_enable();
+//led_enable();
 led_init();
 seg7_on(2, 0);
 seg7_init();
