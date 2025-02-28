@@ -35,19 +35,28 @@
 //-----------------------------------------------------------------------------
 
 void delay_ms(uint32_t ms);
+void part1();
 //-----------------------------------------------------------------------------
 // Define symbolic constants used by the program
 //-----------------------------------------------------------------------------
 
-#define LED1_PIN    31
+#define LED0_PIN    38
 
-#define LED2_PIN    20
+#define LED1_PIN    37
 
-#define LED3_PIN    13
+#define LED2_PIN    36
 
-#define LED4_PIN    10
+#define LED3_PIN    35
 
-#define LED5_PIN    11
+#define LED4_PIN    32
+
+#define LED5_PIN    31
+
+#define LED6_PIN    28
+
+#define LED7_PIN    29
+
+#define LED_EN      26
 
 
 const char letters[] =
@@ -70,25 +79,7 @@ int seg7_digit = 0;
 
 int main(void)
 {
-clock_init_40mhz();
-//led_enable();
-led_init();
-seg7_on(2, 0);
-seg7_init();
-launchpad_gpio_init();
-
-
-
- seg7_init();  // Initialize 7-segment display
-
-    while (1) {
-        for (uint8_t num = 0; num <= 9; num++) {
-            for (uint8_t digit = 0; digit < 4; digit++) {
-                seg7_hex(num, digit);  // Display number on the segment
-                delay_ms(250);         // Delay for visibility
-            }
-        }
-    }
+    part1();
 
  }
  
@@ -97,6 +88,46 @@ launchpad_gpio_init();
 }
  // Endless loop to prevent program from ending
  
+
+
+ void part1(){
+    clock_init_40mhz();
+    launchpad_gpio_init();
+    lp_leds_init();
+    led_init();
+
+    // Enable the LED bar
+    led_enable();
+
+    for (uint8_t i = 0; i < 8; i++)
+        {
+            led_on(i);       // Turn on the current LED
+            msec_delay(500);   // Delay for visibility
+        }
+
+
+ }
+
+ void part2(){
+
+    clock_init_40mhz();
+    launchpad_gpio_init();
+    lp_leds_init();
+    led_init();
+
+    // Enable the LED bar
+    led_enable();
+
+        // Loop through all 8 LEDs, turning them on one at a time
+        for (uint8_t i = 0; i < 8; i++)
+        {
+            leds_off();      // Turn off all LEDs
+            led_on(i);       // Turn on the current LED
+            msec_delay(1000);   // Delay for visibility
+        }
+
+
+ }
 
  /* main */
 
