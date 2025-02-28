@@ -50,15 +50,17 @@ int main(void) {
     lp_leds_init();
     led_init();
     led_enable();
-    
-    run_lab4_part1();
-    msec_delay(1000); //pause for visibility
-    run_lab4_part2();
-    run_lab4_part3();
-    msec_delay(500);
-    
-    // Initialize 7-segment display
     seg7_init();
+
+    //Lab code:
+    
+    // run_lab4_part1();
+    // msec_delay(1000); //pause for visibility
+    // run_lab4_part2();
+    // run_lab4_part3();
+    // msec_delay(500);
+    
+    
     run_lab4_part4();
     msec_delay(500);
     
@@ -78,6 +80,7 @@ int main(void) {
 //    visibility.
 //----------------------------------------------------------------------------- 
 void run_lab4_part1() {
+    seg7_off(); //Turn off seg7 display
     for (uint8_t i = 0; i < 8; i++) {
         led_on(i); // Turn on the current LED
         msec_delay(500); // Delay for visibility
@@ -139,7 +142,7 @@ void run_lab4_part3() {
 //----------------------------------------------------------------------------- 
 void run_lab4_part4() {
     led_disable(); // Disable all LEDs
-    seg7_hex(16, 0); // Display 'L' on DIG0 of the 7-segment display
+    seg7_on(0x38,0);
     msec_delay(2000);
     leds_off();
 }
