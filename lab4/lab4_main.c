@@ -1,16 +1,17 @@
 //*****************************************************************************
 //*****************************    C Source Code    ***************************
 //*****************************************************************************
-//  DESIGNER NAME:  TBD
+//  DESIGNER NAME:  Sophia Buchman
 //
-//       LAB NAME:  TBD
+//       LAB NAME:  Lab 4
 //
-//      FILE NAME:  main.c
+//      FILE NAME:  lab4_main.c
 //
 //-----------------------------------------------------------------------------
 //
 // DESCRIPTION:
-//    This program serves as a ... 
+//    This program serves as an introduction to controlling GPIO pins on the 
+//    Launch Pad.
 //
 //*****************************************************************************
 //*****************************************************************************
@@ -41,37 +42,14 @@ void run_lab4_part2();
 void run_lab4_part1();
 void run_lab4_part3();
 void run_lab4_part4();
+void run_lab4_part5();
+void run_lab5_part6();
 
 //-----------------------------------------------------------------------------
 // Define symbolic constants used by the program
 //-----------------------------------------------------------------------------
 
-#define LED0_PIN 38
 
-#define LED1_PIN 37
-
-#define LED2_PIN 36
-
-#define LED3_PIN 35
-
-#define LED4_PIN 32
-
-#define LED5_PIN 31
-
-#define LED6_PIN 28
-
-#define LED7_PIN 29
-
-#define LED_EN 26
-
-const char letters[] = {
-  0x39,
-  0x77,
-  0x71,
-  0x79
-};
-
-int seg7_digit = 0;
 
 //-----------------------------------------------------------------------------
 // Define global variables and structures here.
@@ -89,15 +67,17 @@ int main(void) {
   led_enable();
   // end of start up
 
-  //run_lab4_part1();
-  //run_lab4_part2();
-  //run_lab4_part3();
-  //msec_delay(500)
-
-  //start up hex
+  run_lab4_part1();
+  run_lab4_part2();
+  run_lab4_part3();
+  msec_delay(500);
   seg7_init();
-
+  
   run_lab4_part4();
+  msec_delay(500);
+
+  run_lab4_part5();
+  run_lab5_part6();
 
   while (1); //prevents issues with exit.c
 }
@@ -159,9 +139,48 @@ void run_lab4_part3() {
 
 
 void run_lab4_part4(){
-
     seg7_hex(16, 0); //Added L to list of possible char's. Displays on DIG0
+    leds_off();
+}
 
+void run_lab4_part5(){
+
+    uint8_t counter = 0;
+    led_disable();
+    while(counter < 4 ){
+        
+        seg7_hex(4, 1);
+        
+        msec_delay(2000);
+        seg7_off();
+        msec_delay(3000);
+        counter++;
+    }
+
+    
+
+}
+
+void run_lab5_part6(){
+    uint8_t counter = 0;
+    led_disable();
+    while(counter < 200 ){
+        
+        seg7_hex(12, 0);
+        msec_delay(1);
+        seg7_off();
+        seg7_hex(10, 1);
+        msec_delay(1);
+        seg7_off();
+        seg7_hex(15, 2);
+        msec_delay(1);
+        seg7_off();
+        seg7_hex(14, 3);
+        msec_delay(1);
+        seg7_off();
+        
+        counter++;
+    }
 
 
 }
