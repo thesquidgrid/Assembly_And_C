@@ -30,12 +30,15 @@
 #include "uart.h"
 
 
+
 //-----------------------------------------------------------------------------
 // Define function prototypes used by the program
 //-----------------------------------------------------------------------------
 
-void delay_ms(uint32_t ms);
-void part1();
+void run_lab4_part2();
+void run_lab4_part1();
+void run_lab4_part3();
+
 //-----------------------------------------------------------------------------
 // Define symbolic constants used by the program
 //-----------------------------------------------------------------------------
@@ -79,18 +82,21 @@ int seg7_digit = 0;
 
 int main(void)
 {
-    part1();
+    clock_init_40mhz();
+    launchpad_gpio_init();
+    lp_leds_init();
+    led_init();
+    led_enable();
+    //run_lab4_part1();
+    //run_lab4_part2();
+    leds_on(0x01);
+    run_lab4_part3();
 
+    while(1); //prevents issues with exit.c
  }
  
- void delay_ms(uint32_t ms) {
-    for (volatile uint32_t i = 0; i < (ms * 4000); i++);  // Approximate delay
-}
- // Endless loop to prevent program from ending
- 
 
-
- void part1(){
+ void run_lab4_part1(){
     clock_init_40mhz();
     launchpad_gpio_init();
     lp_leds_init();
@@ -99,35 +105,72 @@ int main(void)
     // Enable the LED bar
     led_enable();
 
-    for (uint8_t i = 0; i < 8; i++)
+   for (uint8_t i = 0; i < 8; i++)
         {
             led_on(i);       // Turn on the current LED
             msec_delay(500);   // Delay for visibility
         }
 
 
+
  }
 
- void part2(){
+ void run_lab4_part2(){
 
-    clock_init_40mhz();
-    launchpad_gpio_init();
-    lp_leds_init();
-    led_init();
+        int8_t counter = 4;
 
-    // Enable the LED bar
-    led_enable();
-
+        while(counter >= 0){
         // Loop through all 8 LEDs, turning them on one at a time
-        for (uint8_t i = 0; i < 8; i++)
+        for (uint8_t i = 0; i < 6; i++)
         {
             leds_off();      // Turn off all LEDs
             led_on(i);       // Turn on the current LED
-            msec_delay(1000);   // Delay for visibility
+            msec_delay(200);   // Delay for visibility
         }
 
+        for (int8_t i = 6; i >= 0; i--)
+        {
+            
+            leds_off();      // Turn off all LEDs
+            led_on(i);       // Turn on the current LED
+            msec_delay(200);   // Delay for visibility
 
+        }
+
+        leds_off();
+        counter--;
+        }
+       // seg7_off();
  }
+
+
+ 
+
+ void run_lab4_part3()
+{
+    
+    uint8_t counter = 0;
+    uint8_t loopCounter = 0;
+   
+    while(loopCounter < 2){
+
+        leds_on((uint32_t)counter);
+        counter++;
+        msec_delay(100);
+        leds_off();
+
+        if(counter == 255){
+            loopCounter++;
+        }
+
+    }
+    
+    }
+
+
+ 
+
+
 
  /* main */
 
