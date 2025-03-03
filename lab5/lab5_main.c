@@ -1,0 +1,77 @@
+//*****************************************************************************
+//*****************************    C Source Code    ***************************
+//*****************************************************************************
+//  DESIGNER NAME:  TBD
+//
+//       LAB NAME:  TBD
+//
+//      FILE NAME:  main.c
+//
+//-----------------------------------------------------------------------------
+//
+// DESCRIPTION:
+//    This program serves as a ... 
+//
+//*****************************************************************************
+//*****************************************************************************
+
+//-----------------------------------------------------------------------------
+// Loads standard C include files
+//-----------------------------------------------------------------------------
+#include <stdio.h>
+
+//-----------------------------------------------------------------------------
+// Loads MSP launchpad board support macros and definitions
+//-----------------------------------------------------------------------------
+#include <ti/devices/msp/msp.h>
+#include "LaunchPad.h"
+#include "clock.h"
+
+
+//-----------------------------------------------------------------------------
+// Define function prototypes used by the program
+//-----------------------------------------------------------------------------
+
+
+//-----------------------------------------------------------------------------
+// Define symbolic constants used by the program
+//-----------------------------------------------------------------------------
+
+
+//-----------------------------------------------------------------------------
+// Define global variables and structures here.
+// NOTE: when possible avoid using global variables
+//-----------------------------------------------------------------------------
+
+
+// Define a structure to hold different data types
+
+int main(void)
+{
+    clock_init_40mhz();
+    launchpad_gpio_init();
+    lp_leds_init();
+    led_init();
+    led_enable();
+    seg7_init();
+    dipsw_init();
+
+
+    uint8_t loopCount = 0;
+    while(loopCount < 5){
+        if(is_pb_down(PB1_IDX)){
+            seg7_hex(0x03);
+            loopCount++;
+        } else{
+            seg7_off();   
+        }
+        while(is_pb_down(PB1_IDX)){
+            msec_delay(10);
+        }
+    }
+ 
+ // Endless loop to prevent program from ending
+ while (1);
+
+} /* main */
+
