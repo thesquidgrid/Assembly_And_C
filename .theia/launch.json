@@ -23,6 +23,15 @@
             "type": "ccs-debug",
             "request": "launch",
             "project": "Lab_3_p1"
+        },
+        {
+            "name": "lab5",
+            "type": "ccs-debug",
+            "request": "launch",
+            "projectInfo": {
+                "name": "lab5",
+                "resourceId": "/lab5/lab5_main.c"
+            }
         }
     ]
 }
