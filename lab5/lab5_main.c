@@ -18,6 +18,7 @@
 //-----------------------------------------------------------------------------
 // Loads standard C include files
 //-----------------------------------------------------------------------------
+
 #include <stdio.h>
 
 //-----------------------------------------------------------------------------
@@ -36,6 +37,8 @@
 void run_lab5_part1();
 void run_lab5_part2();
 void run_lab5_part3();
+void run_lab5_part4();
+void flashAllLEDS(uint8_t);
 //-----------------------------------------------------------------------------
 // Define symbolic constants used by the program
 //-----------------------------------------------------------------------------
@@ -69,8 +72,8 @@ int main(void) {
    
    //run_lab5_part1();
    //run_lab5_part2();
-   run_lab5_part3();
-
+   //run_lab5_part3();
+    run_lab5_part4();
    // Endless loop to prevent program from ending
    while (1);
 
@@ -170,4 +173,37 @@ void run_lab5_part3(){
     //delay prevents the 8th input from immediately shutting off
 
     leds_off();
+}
+
+void run_lab5_part4(){
+    led_enable();
+    uint8_t loopCounter = 0;
+    uint8_t ledVal = 0;
+    while(loopCounter < 4){
+
+        loopCounter++;
+        while(getkey_pressed() == 0x10); //prevents code from moving forward if there is nothing pressed.
+        ledVal = keypad_scan(); 
+        wait_no_key_pressed(); //prevents the code from speeding past. the user must press and then unpress for the code to continue.
+        flashAllLEDS(ledVal); //turn on LEDs # of times from value gotten from keypad
+        
+    }
+
+    msec_delay(2000);
+    //delay prevents the 8th input from immediately shutting off
+
+    leds_off();
+}
+
+void flashAllLEDS(uint8_t numberOfTimes){
+
+    uint8_t counter = 0; //loop counter
+    while(counter < numberOfTimes){ //loop goes for as long as the user specifies
+        leds_on(256); //flash all LEDS on
+        msec_delay(500);
+        leds_off();
+        msec_delay(500);
+        counter++;
+    }
+
 }
