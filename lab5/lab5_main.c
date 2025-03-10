@@ -60,7 +60,7 @@ int main(void) {
     seg7_init();
     dipsw_init();
     keypad_init();
-
+    is_pb_down(PB1_IDX);
     run_lab5_part1();
     msec_delay(LED_FLASHES);
     run_lab5_part2();
