@@ -32,6 +32,15 @@
                 "name": "lab5",
                 "resourceId": "/lab5/lab5_main.c"
             }
+        },
+        {
+            "name": "lab6",
+            "type": "ccs-debug",
+            "request": "launch",
+            "projectInfo": {
+                "name": "lab6",
+                "resourceId": "/lab6/lcd1602.c"
+            }
         }
     ]
 }
