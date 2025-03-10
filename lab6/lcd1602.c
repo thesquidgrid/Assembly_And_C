@@ -3,7 +3,7 @@
 // *****************************************************************************
 //   DESIGNER NAME:  Bruce Link
 //
-//         VERSION:  0.1
+//         VERSION:  0.2
 //
 //       FILE NAME:  LCD1602.c
 //
@@ -338,7 +338,7 @@ int8_t hex_to_ascii(uint8_t hex_value)
   } /* if */
   else 
   {
-      ascii_value = 'A' + (lower_nibble - 10); 
+      ascii_value = 'A' + (lower_nibble - BASE_TEN); 
   } /* else */
 
   return (ascii_value);
@@ -400,10 +400,10 @@ void byte_to_ascii(uint8_t byte, char* string)
     if ((byte != 0) || (digit_idx == 0))
     {
       // Convert digit to ASCII
-      string[2-digit_idx] = '0' + (byte % 10);
+      string[2-digit_idx] = '0' + (byte % BASE_TEN);
     
       // Move to the next digit
-      byte /= 10;
+      byte /= BASE_TEN;
     } /* if */
     else
     {
@@ -413,36 +413,6 @@ void byte_to_ascii(uint8_t byte, char* string)
   
 } /* byte_to_ascii */
 
-
-// -----------------------------------------------------------------------------
-// DESCRIPTION
-//    This function converts an 8-bit byte to its binary ASCII string
-//    representation and writes the string to an LCD display using the 
-//    `lcd_write_string` function. The string represents the byte in a 
-//    3-character binary format, right-justified with leading spaces.
-//
-// INPUT PARAMETERS:
-//    byte - The input 8-bit byte value to be converted to a binary ASCII string
-//           and written to the LCD.
-//
-// OUTPUT PARAMETERS:
-//    none
-//
-// RETURN:
-//    none
-// -----------------------------------------------------------------------------
-void lcd_write_byte(uint8_t byte)
-{
-  // reserve space for up to 5 characters
-  char string_buffer[] = "   "; 
-  
-  // Convert byte to binary ASCII string
-  byte_to_ascii(byte, string_buffer);
-  
-  // Write binary ASCII string to LCD
-  lcd_write_string(string_buffer);
-  
-} /* lcd_write_byte */
 
 // -----------------------------------------------------------------------------
 // DESCRIPTION
@@ -473,10 +443,10 @@ void doublebyte_to_ascii(uint16_t doublebyte, char* string)
     if ((doublebyte != 0) || (digit_idx == 0))
     {
       // Convert digit to ASCII
-      string[4-digit_idx] = '0' + (doublebyte % 10);
+      string[4-digit_idx] = '0' + (doublebyte % BASE_TEN);
     
       // Move to the next digit
-      doublebyte /= 10;
+      doublebyte /= BASE_TEN;
     } /* if */
     else
     {
@@ -486,6 +456,79 @@ void doublebyte_to_ascii(uint16_t doublebyte, char* string)
   
 } /* doublebyte_to_ascii */
 
+
+// -----------------------------------------------------------------------------
+// DESCRIPTION
+//    This function converts a 16-bit unsigned integer (double byte) to its  
+//    ASCII string representation, padding it to 5 characters, right-justified, 
+//    with no leading '0's. The ASCII string is stored in the provided character 
+//    array. The string will represent the decimal value of the 16-bit integer.
+//
+// INPUT PARAMETERS:
+//    doublebyte - The 16-bit unsigned integer to be converted to ASCII.
+//    string     - Pointer to a character array where the ASCII string
+//                 representation will be stored. It should have enough space
+//                 to hold 10 characters plus the null terminator.
+//
+// OUTPUT PARAMETERS:
+//    string     - Ten numeric ASCII characters, NULL terminated, string of 
+//                 the converted number.
+//
+// RETURN:
+//    none
+// -----------------------------------------------------------------------------
+void quadbyte_to_ascii(uint32_t quadbyte, char* string) 
+{
+  // Extract each digit of the double byte and convert it to ASCII
+  for (uint8_t digit_idx = 0; (digit_idx < 10); digit_idx++) 
+  {
+    // Always convert first digit even if it is quadbyte is 0
+    if ((quadbyte != 0) || (digit_idx == 0))
+    {
+      // Convert digit to ASCII
+      string[9-digit_idx] = '0' + (quadbyte % BASE_TEN);
+    
+      // Move to the next digit
+      quadbyte /= BASE_TEN;
+    } /* if */
+    else
+    {
+      string[9-digit_idx] = ' ';
+    } /* else */
+  } /* for */
+  
+} /* quadbyte_to_ascii */
+
+
+// -----------------------------------------------------------------------------
+// DESCRIPTION
+//    This function converts an 8-bit byte to its binary ASCII string
+//    representation and writes the string to an LCD display using the 
+//    `lcd_write_string` function. The string represents the byte in a 
+//    3-character binary format, right-justified with leading spaces.
+//
+// INPUT PARAMETERS:
+//    byte - The input 8-bit byte value to be converted to a binary ASCII string
+//           and written to the LCD.
+//
+// OUTPUT PARAMETERS:
+//    none
+//
+// RETURN:
+//    none
+// -----------------------------------------------------------------------------
+void lcd_write_byte(uint8_t byte)
+{
+  // reserve space for up to 3 characters
+  char string_buffer[] = "   "; 
+  
+  // Convert byte to binary ASCII string
+  byte_to_ascii(byte, string_buffer);
+  
+  // Write binary ASCII string to LCD
+  lcd_write_string(string_buffer);
+  
+} /* lcd_write_byte */
 
 // -----------------------------------------------------------------------------
 // DESCRIPTION
@@ -514,3 +557,36 @@ void lcd_write_doublebyte(uint16_t doublebyte)
   lcd_write_string(string_buffer);
 
 } /* lcd_write_doublebyte */
+
+
+// -----------------------------------------------------------------------------
+// DESCRIPTION
+//    This function converts a 32-bit quad byte to its binary ASCII string
+//    representation and writes it to an LCD display.
+//    The conversion is done by the helper function quadbyte_to_ascii, which 
+//    populates a string buffer with the corresponding binary ASCII 
+//    characters. The resultant string is then sent to the LCD display 
+//    using the lcd_write_string function
+//
+// INPUT PARAMETERS:
+//    doublebyte - The input 32-bit quad byte value to be converted to binary 
+//                 ASCII string and written to the LCD.
+//
+// OUTPUT PARAMETERS:
+//    none
+//
+// RETURN:
+//    none
+// -----------------------------------------------------------------------------
+void lcd_write_quadbyte(uint32_t quadbyte)
+{
+  // reserve space for up to 10 characters
+  char string_buffer[] = "          ";
+  
+  // Convert double byte to binary ASCII string
+  quadbyte_to_ascii(quadbyte, string_buffer);
+  
+  // Write binary ASCII string to LCD
+  lcd_write_string(string_buffer);
+
+} /* lcd_write_quadbyte */

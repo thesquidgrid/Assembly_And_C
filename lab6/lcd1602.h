@@ -3,7 +3,7 @@
 // *****************************************************************************
 //   DESIGNER NAME:  Bruce Link
 //
-//         VERSION:  0.1
+//         VERSION:  0.2
 //
 //       FILE NAME:  LCD1602.c
 //
@@ -64,6 +64,7 @@
 #define TOTAL_CHARACTERS_PER_LCD         (LINES_PER_LCD*CHARACTERS_PER_LCD_LINE)
 #define LCD_LINE1_ADDR                                                    (0x00)
 #define LCD_LINE2_ADDR                                                    (0x40)
+#define BASE_TEN                                                            (10)
 
 //# Define LCD line numbers
 #define LCD_LINE_NUM_1                                                       (0)
@@ -87,72 +88,72 @@
 #define LCD_CHAR_POSITION_15                                                (14)
 #define LCD_CHAR_POSITION_16                                                (15)
 
-#define IIC_TIME_DELAY_2MS                                                     2
-#define NIBBLE_SHIFT                                                           4
-#define UPPER_NIBBLE_MASK                                                   0xF0
-#define LOWER_NIBBLE_MASK                                                   0x0F
+#define IIC_TIME_DELAY_2MS                                                   (2)
+#define NIBBLE_SHIFT                                                         (4)
+#define UPPER_NIBBLE_MASK                                                 (0xF0)
+#define LOWER_NIBBLE_MASK                                                 (0x0F)
 
 //# Define IIC Port Expander bit positions
-#define READ_ENABLE                                                          0x2
-#define WRITE_ENABLE                                                         0x0
-#define LATCH_ENABLE                                                         0x4
-#define LATCH_DISABLE                                                        0x0
+#define READ_ENABLE                                                        (0x2)
+#define WRITE_ENABLE                                                       (0x0)
+#define LATCH_ENABLE                                                       (0x4)
+#define LATCH_DISABLE                                                      (0x0)
 
 //# Define LCD1602 Register Select (RS) values
-#define LCD_INSTR_REG                                                        0x0
-#define LCD_DATA_REG                                                         0x1
+#define LCD_INSTR_REG                                                      (0x0)
+#define LCD_DATA_REG                                                       (0x1)
 
 // LCD1602 control mode for RS (Instruction/Data), RW, and E (Latch)
 #define LCD_E_SIGNAL_HIGH                                                 (1<<2)
 #define LCD_BACKLIGHT_ON                                                  (1<<3)
-#define LCD_RS_BIT_MASK                                                     0x01
-#define LCD_RW_BIT_MASK                                                     0x02
-#define LCD_EN_BIT_MASK                                                     0x04
-#define LCD_LED_BIT_MASK                                                    0x08
+#define LCD_RS_BIT_MASK                                                   (0x01)
+#define LCD_RW_BIT_MASK                                                   (0x02)
+#define LCD_EN_BIT_MASK                                                   (0x04)
+#define LCD_LED_BIT_MASK                                                  (0x08)
 
 // LCD1602 commands
-#define LCD_CLEAR_DISPLAY_CMD                                               0x01
-#define LCD_RETURN_HOME_CMD                                                 0x02
-#define LCD_ENTRY_MODE_SET_CMD                                              0x04
-#define LCD_DISPLAY_CNTRL_CMD                                               0x08
-#define LCD_CURSOR_SHIFT_CMD                                                0x10
-#define LCD_FUNCTION_SET_CMD                                                0x20
-#define LCD_SET_CGRAM_ADDR_CMD                                              0x40
-#define LCD_SET_DDRAM_ADDR_CMD                                              0x80
+#define LCD_CLEAR_DISPLAY_CMD                                             (0x01)
+#define LCD_RETURN_HOME_CMD                                               (0x02)
+#define LCD_ENTRY_MODE_SET_CMD                                            (0x04)
+#define LCD_DISPLAY_CNTRL_CMD                                             (0x08)
+#define LCD_CURSOR_SHIFT_CMD                                              (0x10)
+#define LCD_FUNCTION_SET_CMD                                              (0x20)
+#define LCD_SET_CGRAM_ADDR_CMD                                            (0x40)
+#define LCD_SET_DDRAM_ADDR_CMD                                            (0x80)
 
 // Bits for display entry mode command
-#define LCD_ENTRY_RIGHT                                                     0x00
-#define LCD_ENTRY_LEFT                                                      0x02
-#define LCD_ENTRY_SHIFT_INC                                                 0x01
-#define LCD_ENTRY_SHIFT_DEC                                                 0x00
+#define LCD_ENTRY_RIGHT                                                   (0x00)
+#define LCD_ENTRY_LEFT                                                    (0x02)
+#define LCD_ENTRY_SHIFT_INC                                               (0x01)
+#define LCD_ENTRY_SHIFT_DEC                                               (0x00)
 
 // Bits for display on/off control command
-#define LCD_BLINK_ON                                                        0x01
-#define LCD_BLINK_OFF                                                       0x00
-#define LCD_CURSOR_ON                                                       0x02
-#define LCD_CURSOR_OFF                                                      0x00
-#define LCD_DISPLAY_ON                                                      0x04
-#define LCD_DISPLAY_OFF                                                     0x00
+#define LCD_BLINK_ON                                                      (0x01)
+#define LCD_BLINK_OFF                                                     (0x00)
+#define LCD_CURSOR_ON                                                     (0x02)
+#define LCD_CURSOR_OFF                                                    (0x00)
+#define LCD_DISPLAY_ON                                                    (0x04)
+#define LCD_DISPLAY_OFF                                                   (0x00)
 
 // Bits for display/cursor shift control command
-#define LCD_MOVE_RIGHT                                                      0x04
-#define LCD_MOVE_LEFT                                                       0x00
-#define LCD_DISPLAY_MOVE                                                    0x08
-#define LCD_CURSOR_MOVE                                                     0x00
+#define LCD_MOVE_RIGHT                                                    (0x04)
+#define LCD_MOVE_LEFT                                                     (0x00)
+#define LCD_DISPLAY_MOVE                                                  (0x08)
+#define LCD_CURSOR_MOVE                                                   (0x00)
 
 // Bits for function set command
-#define LCD_8BIT_MODE                                                       0x10
-#define LCD_4BIT_MODE                                                       0x00
-#define LCD_2_LINE_DISPLAY                                                  0x08
-#define LCD_1_LINE_DISPLAY                                                  0x00
-#define LCD_5x10_DOTS                                                       0x04
-#define LCD_5x8_DOTS                                                        0x00
+#define LCD_8BIT_MODE                                                     (0x10)
+#define LCD_4BIT_MODE                                                     (0x00)
+#define LCD_2_LINE_DISPLAY                                                (0x08)
+#define LCD_1_LINE_DISPLAY                                                (0x00)
+#define LCD_5x10_DOTS                                                     (0x04)
+#define LCD_5x8_DOTS                                                      (0x00)
 
 // Bits for entry mode set command
-#define LCD_SHIFT_DISABLE                                                   0x00
-#define LCD_SHIFT_ENABLE                                                    0x01
-#define LCD_ADDR_DEC_ENABLE                                                 0x00
-#define LCD_ADDR_INC_ENABLE                                                 0x02
+#define LCD_SHIFT_DISABLE                                                 (0x00)
+#define LCD_SHIFT_ENABLE                                                  (0x01)
+#define LCD_ADDR_DEC_ENABLE                                               (0x00)
+#define LCD_ADDR_INC_ENABLE                                               (0x02)
 
 
 
