@@ -86,10 +86,11 @@ int main(void)
     int8_t count = 0;
     int8_t ascii;
     while(flag == false){
-        
-        if(count == 16 && (rowFlag == true)){
-            rowFlag = !rowFlag;
+
+        if(rowFlag == true)){
+            lcd_clear();
             count = 0;
+            rowFlag = false;
         }
 
         if(rowFlag == false){
@@ -106,12 +107,15 @@ int main(void)
         msec_delay(200);
         
         if(is_pb_down(PB1_IDX)){
+            count = 0;
+            lcd_clear();
             msec_delay(DEBOUNCE);
-            //
         }
 
         if(is_pb_down(PB2_IDX)){
             msec_delay(DEBOUNCE);
+            lcd_clear();
+            lcd_write_string("program stopped");
             flag = true;
         }
     }
