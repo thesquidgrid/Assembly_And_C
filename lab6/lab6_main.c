@@ -67,6 +67,8 @@ int main(void) {
    lcd_clear();
    keypad_init();
 
+   lcd_write_string("     WINNER");
+
    run_lab6_part1();
    pushButton_release(PB2_IDX);
    run_lab6_part2();
