@@ -56,7 +56,7 @@
 // I2C Bus address for the LCD1602 module
 // Update this address if module has a different IIC address
 //----------------------------------------------------------------------------
-#define LCD_IIC_ADDRESS 0x3F
+#define LCD_IIC_ADDRESS 0x27
 
 // Define LCD size (16 characters x 2 lines)
 #define CHARACTERS_PER_LCD_LINE                                             (16)
