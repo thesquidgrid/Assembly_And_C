@@ -34,6 +34,7 @@
 //-----------------------------------------------------------------------------
 
 void SysTick_Handler();
+void run_lab7_part3();
 #define MSPM0_CLOCK_FREQUENCY (40e6)
 #define SYST_TICK_PERIOD (10.25E-3)
 #define SYST_TICK_PERIOD_COUNT (SYST_TICK_PERIOD * MSPM0_CLOCK_FREQUENCY)
@@ -50,8 +51,7 @@ void SysTick_Handler();
 
 
 const uint8_t seg7_number_code[] = {
-    0xC0, 0xF9, 0xA4, 0xB0, 0x99
- 
+    0, 1, 2, 3, 4
 };
 
 const uint8_t delay_count[] = {
@@ -68,7 +68,6 @@ const uint8_t delay_count[] = {
 
 int main(void)
 {
-
    clock_init_40mhz();
    launchpad_gpio_init();
    led_init();
@@ -77,9 +76,16 @@ int main(void)
    lcd1602_init();
    lcd_clear();
    dipsw_init();
-
+   leds_off();
+   
    sys_tick_init(SYST_TICK_PERIOD_COUNT);
    SysTick_Handler();
+   run_lab7_part3();
+
+   sys_tick_disable();
+   seg7_disable();
+   led_disable();
+
  
  // Endless loop to prevent program from ending
  while (1);
@@ -112,13 +118,46 @@ void SysTick_Handler(void) {
 
    delay_time--;
    if (delay_time == 0) {
-      seg7_on(seg7_number_code[code_index], SEG7_DIG0_ENABLE_IDX);
+      int switchup = dipswitch_up();
+      seg7_hex(switchup, 0);
 
       delay_time = delay_count[code_index];
       code_index++;
-
+      
       if (code_index == NUM_STATES) {
          code_index = 0;
       }
    }
+}
+
+
+void run_lab7_part3() {
+   lcd_clear();
+   lcd_set_ddram_addr(LCD_LINE1_ADDR);
+   lcd_write_string("Running Part 3");
+   msec_delay(1000);
+   lcd_clear();
+
+   bool flag = false;
+   int8_t count = 0;
+   while (flag == false) {
+
+      lcd_set_ddram_addr(LCD_LINE1_ADDR + LCD_CHAR_POSITION_7);
+      lcd_write_byte(count);
+      count++;
+      msec_delay(200);
+      if (count > 99) {
+         count = 0;
+      }
+
+      if (is_pb_down(PB2_IDX)) {
+         msec_delay(15);
+         flag = true;
+      }
+   }
+
+   lcd_clear();
+   lcd_write_string("Part 3 Done");
+   lcd_set_ddram_addr(LCD_LINE2_ADDR);
+   lcd_write_string("Press PB2");
 }

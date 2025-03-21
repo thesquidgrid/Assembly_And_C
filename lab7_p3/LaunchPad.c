@@ -1955,3 +1955,34 @@ void dac_write_data(uint16_t data)
 {
   DAC0->DATA0 = data;
 } /* dac_write_data */
+
+
+
+
+uint8_t dipswitch_up(void)
+{
+    uint8_t up_count = 0;
+
+    for (uint8_t sw_idx = 0; sw_idx < MAX_NUM_DIPSW; sw_idx++)
+    {
+        uint8_t switch_state = 0;
+
+        if (dip_switch_config_data[sw_idx].port_id == GPIO_PORTA)
+        {
+            switch_state = ((GPIOA->DIN31_0 & dip_switch_config_data[sw_idx].bit_mask) ==
+                            dip_switch_config_data[sw_idx].bit_mask);
+        }
+        else
+        {
+            switch_state = ((GPIOB->DIN31_0 & dip_switch_config_data[sw_idx].bit_mask) ==
+                            dip_switch_config_data[sw_idx].bit_mask);
+        }
+
+        if (switch_state)
+        {
+            up_count++;
+        }
+    }
+
+    return up_count;
+}
