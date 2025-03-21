@@ -1,180 +1,159 @@
 //*****************************************************************************
 //*****************************    C Source Code    ***************************
 //*****************************************************************************
-//  DESIGNER NAME:  TBD
+//  DESIGNER NAME:  Sophia Buchman
 //
-//       LAB NAME:  TBD
+//       LAB NAME:  lab7
 //
-//      FILE NAME:  main.c
+//      FILE NAME:  lab7_p4_main.c
 //
-//-----------------------------------------------------------------------------
+//----------------------------------------------------------------------------- 
 //
 // DESCRIPTION:
-//    This program serves as a ... 
+//    This program serves as a GPIO interrupt handler for the MSPM0G3507
+//    microcontroller. It detects button presses using interrupts instead of 
+//    polling, updates an LCD display, and manages global flags for state changes.
 //
 //*****************************************************************************
 //*****************************************************************************
 
-//-----------------------------------------------------------------------------
+//----------------------------------------------------------------------------- 
 // Loads standard C include files
-//-----------------------------------------------------------------------------
+//----------------------------------------------------------------------------- 
 #include <stdio.h>
 
-//-----------------------------------------------------------------------------
+//----------------------------------------------------------------------------- 
 // Loads MSP launchpad board support macros and definitions
-//-----------------------------------------------------------------------------
+//----------------------------------------------------------------------------- 
 #include <ti/devices/msp/msp.h>
 #include "LaunchPad.h"
 #include "clock.h"
 #include "lcd1602.h"
-#include "ti/devices/msp/m0p/mspm0g350x.h"
-#include "ti/devices/msp/peripherals/hw_gpio.h"
-#include <stddef.h>
-#include <stdint.h>
-#include <ti/drivers/GPIO.h>
 
-
-
-//-----------------------------------------------------------------------------
+//----------------------------------------------------------------------------- 
 // Define function prototypes used by the program
-//-----------------------------------------------------------------------------
-
-bool run_lab7_part3(uint8_t count);
+//----------------------------------------------------------------------------- 
 void run_lab7_part4();
-void config_pb1_interrupts();
-void config_pb2_interrupts();
-#define MSPM0_CLOCK_FREQUENCY (40e6)
+void SysTick_Handler();
 
+//----------------------------------------------------------------------------- 
+// Define system clock and SysTick period
+//----------------------------------------------------------------------------- 
+#define MSPM0_CLOCK_FREQUENCY (40e6) // System clock frequency: 40MHz
+#define SYST_TICK_PERIOD (10.25E-3)  // SysTick interrupt period: 10.25ms
+#define SYST_TICK_PERIOD_COUNT (SYST_TICK_PERIOD * MSPM0_CLOCK_FREQUENCY)
 
-//-----------------------------------------------------------------------------
-// Define symbolic constants used by the program
-//-----------------------------------------------------------------------------
-#define NUM_STATES 5
-//-----------------------------------------------------------------------------
-// Define global variables and structures here.
-// NOTE: when possible avoid using global variables
-//-----------------------------------------------------------------------------
-volatile uint8_t pb2_flag = 0;
-volatile uint8_t pb1_flag = 0;
+//----------------------------------------------------------------------------- 
+// Define global variables
+//----------------------------------------------------------------------------- 
+bool pb1_flag = false;  // Flag for button 1 press
+bool pb2_flag = false;  // Flag for button 2 press
 
-const uint8_t seg7_number_code[] = {
-    0, 1, 2, 3, 4
-};
+//////////////////////////////////////////////////////
+// DESCRIPTION:
+//	Main function initializing peripherals and running Lab 7 Part 4.
+//  The function sets up the system clock, GPIO, LED, I2C, and LCD.
+//  It initializes SysTick for handling periodic interrupts.
+//  The function then enters an infinite loop to keep the program running.
+//
+// INPUT PARAMETERS:
+//	none
+//
+// OUTPUT PARAMETERS:
+//	none
+//
+// RETURN:
+//	none
+//////////////////////////////////////////////////////
+int main(void) {
+    clock_init_40mhz();   // Initialize system clock to 40MHz
+    launchpad_gpio_init(); // Initialize GPIO pins for buttons
+    led_init();           // Initialize LEDs
+    led_enable();         // Enable LED functionality
+    I2C_init();           // Initialize I2C communication
+    lcd1602_init();       // Initialize LCD display
+    lcd_clear();          // Clear LCD screen
+    dipsw_init();         // Initialize DIP switch (if applicable)
+    sys_tick_init(SYST_TICK_PERIOD_COUNT); // Configure SysTick interrupt
+    seg7_off();
 
-const uint8_t delay_count[] = {
-    0x18, 0x18, 0x18, 0x18, 0x18
-};
+    SysTick_Handler();    // Call SysTick handler for initial setup
+    run_lab7_part4();     // Execute main lab function
 
-//-----------------------------------------------------------------------------
-// Define global variables and structures here.
-// NOTE: when possible avoid using global variables
-//-----------------------------------------------------------------------------
-
-
-// Define a structure to hold different data types
-
-int main(void)
-{
-   clock_init_40mhz();
-   launchpad_gpio_init();
-   led_init();
-   seg7_init();
-   I2C_init();
-   lcd1602_init();
-   lcd_clear();
-   dipsw_init();
-   leds_off();
-   
- 
- // Endless loop to prevent program from ending
- while (1);
-
-} /* main */
-
+    // Endless loop to prevent program from ending
+    while (1);
+} 
 
 //////////////////////////////////////////////////////
 // DESCRIPTION:
 //	This function represents the ISR (Interrupt Service Routine) for
-//	the sysTick timer. It is called at regular intervals based on the
-//	configured SysTick period. This ISO is responsible for managing the
-//	timing and display of the Morse code for .SOS. on the seven-segment
-//	display. It controls the blink timing for the letters, with quick
-//	blinks for "S. (dot-dot-dot) and slower blinks for "0" (dash-dash-dash).
-//	The sequence of letters is repeated indefinitely.
+//	the SysTick timer. It is triggered at regular intervals to handle
+//	button press events. If PB2 is pressed, the pb2_flag is set, and a 
+//	debounce delay is applied. If PB1 is pressed, the pb1_flag is set.
 //
 // INPUT PARAMETERS:
-// none
+//	none
 //
 // OUTPUT PARAMETERS:
-// none
+//	none
 //
 // RETURN:
-// none
-///////////////////////////////////////////////
+//	none
+//////////////////////////////////////////////////////
+void SysTick_Handler(void) {
+    if (is_pb_down(PB2_IDX)) {
+        pb2_flag = true;
+        msec_delay(15); // Debounce delay
+    }
+    else if (is_pb_down(PB1_IDX)) {
+        pb1_flag = true;
+    }
+}
 
-
-
+//////////////////////////////////////////////////////
+// DESCRIPTION:
+//	This function handles the logic for Lab 7 Part 4. It monitors button
+//	presses using global flags and updates the LCD display accordingly.
+//  If PB2 is pressed, a message "PB2 PRESSED" is shown on the LCD.
+//  If PB1 is pressed, the loop terminates, and "Program Stopped" is displayed.
+//
+// INPUT PARAMETERS:
+//	none
+//
+// OUTPUT PARAMETERS:
+//	none
+//
+// RETURN:
+//	none
+//////////////////////////////////////////////////////
 void run_lab7_part4() {
-    config_pb1_interrupts();
-    config_pb2_interrupts();
-    lcd_set_ddram_addr(LCD_LINE1_ADDR + LCD_CHAR_POSITION_7);
-
+    bool toggle = pb2_flag;
     uint8_t counter = 0;
+
     while (!pb1_flag) {
+        lcd_set_ddram_addr(0X04);
         leds_on(counter); // Display counter on LCD
-        lcd_write_byte(counter); // Show binary representation
-        
+        lcd_write_doublebyte(counter); // Show binary representation
+        msec_delay(300); // Delay for visibility
+
         if (pb2_flag) {
-            lcd_clear();
-            lcd_write_string("PB2 PRESSED");
-            counter = 0;
-        } else {
-            lcd_clear();
-        }
+            toggle = !toggle;
+            if (toggle) {
+                lcd_set_ddram_addr(0X40);
+                lcd_write_string("PB2 PRESSED");
+            } else {
+                lcd_clear();
+            }
+            pb2_flag = false; // Reset flag after handling
+        } 
+        
         counter++;
-        if(counter > 99){
+        if (counter > 99) {
             counter = 0;
+            lcd_clear();
         }
-        
-        msec_delay(200); // 0.2s delay
-        
     }
     
     lcd_clear();
     lcd_write_string("Program Stopped");
 }
-
-
-
-
-void config_pb1_interrupts() {
-    GPIOB->GEN_EVENT1.ICLR = (1 << PB1_IDX);  // Clear any previous interrupt flag for PB1
-    GPIOB->POLARITY15_0 |= (1 << PB1_IDX); // Set polarity for PB1
-    GPIOB->GEN_EVENT1.IMASK |= (1 << PB1_IDX);  // Enable interrupt for PB1
-    NVIC_EnableIRQ(GPIOB_INT_IRQn); // Enable NVIC interrupt for GPIOB
-}
-
-void config_pb2_interrupts() {
-    GPIOB->GEN_EVENT1.ICLR = (1 << PB2_IDX);  // Clear any previous interrupt flag for PB2
-    GPIOB->POLARITY15_0 |= (1 << PB2_IDX); // Set polarity for PB1    GPIOB->GEN_EVENT1.IMASK |= (1 << PB2_IDX);  // Enable interrupt for PB2
-    NVIC_EnableIRQ(GPIOB_INT_IRQn); // Enable NVIC interrupt for GPIOB
-}
-
-void GROUP1_IRQHandler(void) {
-    uint32_t source = GPIOB->GEN_EVENT1.IIDX; // Identify the interrupt source
-    
-    if (source == PB2_IDX) { // PB2 triggered the interrupt
-        pb2_flag = !pb2_flag; // Toggle flag
-        GPIOB->GEN_EVENT1.ICLR = (1 << PB2_IDX); // Clear interrupt flag
-    }
-    else if (source == PB1_IDX) { // PB1 triggered the interrupt
-        pb1_flag = 1; // Set flag to stop program
-        GPIOB->GEN_EVENT1.ICLR = (1 << PB1_IDX); // Clear interrupt flag
-    }
-}
-
-
-
-
-
-   

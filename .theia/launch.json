@@ -59,6 +59,15 @@
                 "name": "lab7_p3",
                 "resourceId": "/lab7_p3"
             }
+        },
+        {
+            "name": "lab7_p4",
+            "type": "ccs-debug",
+            "request": "launch",
+            "projectInfo": {
+                "name": "lab7_p4",
+                "resourceId": "/lab7_p4/lab7_p4_main.c"
+            }
         }
     ]
 }

@@ -83,7 +83,7 @@ int main(void)
    run_lab7_part3();
 
    sys_tick_disable();
-   seg7_disable();
+   
    led_disable();
 
  
