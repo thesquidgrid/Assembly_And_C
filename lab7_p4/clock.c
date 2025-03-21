@@ -375,5 +375,3 @@ void sys_tick_disable(void)
   SysTick->LOAD = 0;
   SysTick->CTRL = 0;
 } /* sys_tick_disable */
-
-
