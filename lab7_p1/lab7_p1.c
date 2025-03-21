@@ -100,7 +100,7 @@ int main(void) {
    lcd_clear();
    lcd_set_ddram_addr(0x00);
    lcd_write_string("Press PB2");
-   while (!is_pb_down(PB2_IDX));  // wait for pb2
+while (!is_pb_down(PB2_IDX));  // wait for pb2
 
    // Endless loop to prevent program from ending
    while (1);
