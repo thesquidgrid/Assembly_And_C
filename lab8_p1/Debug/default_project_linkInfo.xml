@@ -2,65 +2,65 @@
 <link_info>
    <banner>TI ARM Clang Linker Unix v4.0.0.LTS</banner>
    <copyright>Copyright (c) 1996-2018 Texas Instruments Incorporated</copyright>
-   <command_line>/home/sofa/ti/ccstheia151/ccs/tools/compiler/ti-cgt-armllvm_4.0.0.LTS/bin/tiarmlnk -I/home/sofa/ti/ccstheia151/ccs/tools/compiler/ti-cgt-armllvm_4.0.0.LTS/lib -o default_project copy.out -mdefault_project copy.map --heap_size=0x800 --stack_size=512 -i/home/sofa/ti/mspm0_sdk_2_03_00_07/source -i/home/sofa/Assembly_And_C/default_project copy -i/home/sofa/Assembly_And_C/default_project copy/Debug/syscfg -i/home/sofa/ti/ccstheia151/ccs/tools/compiler/ti-cgt-armllvm_4.0.0.LTS/lib --diag_wrap=off --display_error_number --warn_sections --xml_link_info=default_project copy_linkInfo.xml --rom_model ./LaunchPad.o ./adc.o ./clock.o ./lcd1602.o ./main.o ./spi.o ./uart.o ./ticlang/startup_mspm0g3507_ticlang.o ../mspm0g3507.cmd -llibc.a --start-group -llibc++.a -llibc++abi.a -llibc.a -llibsys.a -llibsysbm.a -llibclang_rt.builtins.a -llibclang_rt.profile.a --end-group --cg_opt_level=0</command_line>
-   <link_time>0x67e240c2</link_time>
+   <command_line>/home/sofa/ti/ccstheia151/ccs/tools/compiler/ti-cgt-armllvm_4.0.0.LTS/bin/tiarmlnk -I/home/sofa/ti/ccstheia151/ccs/tools/compiler/ti-cgt-armllvm_4.0.0.LTS/lib -o default_project.out -mdefault_project.map --heap_size=0x800 --stack_size=512 -i/home/sofa/ti/mspm0_sdk_2_03_00_07/source -i/home/sofa/Assembly_And_C/default_project -i/home/sofa/Assembly_And_C/default_project/Debug/syscfg -i/home/sofa/ti/ccstheia151/ccs/tools/compiler/ti-cgt-armllvm_4.0.0.LTS/lib --diag_wrap=off --display_error_number --warn_sections --xml_link_info=default_project_linkInfo.xml --rom_model ./LaunchPad.o ./adc.o ./clock.o ./lcd1602.o ./main.o ./spi.o ./uart.o ./ticlang/startup_mspm0g3507_ticlang.o ../mspm0g3507.cmd -llibc.a --start-group -llibc++.a -llibc++abi.a -llibc.a -llibsys.a -llibsysbm.a -llibclang_rt.builtins.a -llibclang_rt.profile.a --end-group --cg_opt_level=0</command_line>
+   <link_time>0x67ddd1cf</link_time>
    <link_errors>0x0</link_errors>
-   <output_file>/home/sofa/Assembly_And_C/default_project copy/Debug/default_project copy.out</output_file>
+   <output_file>/home/sofa/Assembly_And_C/default_project/Debug/default_project.out</output_file>
    <entry_point>
       <name>_c_int00_noinit_noargs</name>
       <address>0xc1</address>
    </entry_point>
    <input_file_list>
       <input_file id="fl-1">
-         <path>/home/sofa/Assembly_And_C/default_project copy/Debug/./</path>
+         <path>/home/sofa/Assembly_And_C/default_project/Debug/./</path>
          <kind>object</kind>
          <file>LaunchPad.o</file>
          <name>LaunchPad.o</name>
       </input_file>
       <input_file id="fl-2">
-         <path>/home/sofa/Assembly_And_C/default_project copy/Debug/./</path>
+         <path>/home/sofa/Assembly_And_C/default_project/Debug/./</path>
          <kind>object</kind>
          <file>adc.o</file>
          <name>adc.o</name>
       </input_file>
       <input_file id="fl-3">
-         <path>/home/sofa/Assembly_And_C/default_project copy/Debug/./</path>
+         <path>/home/sofa/Assembly_And_C/default_project/Debug/./</path>
          <kind>object</kind>
          <file>clock.o</file>
          <name>clock.o</name>
       </input_file>
       <input_file id="fl-4">
-         <path>/home/sofa/Assembly_And_C/default_project copy/Debug/./</path>
+         <path>/home/sofa/Assembly_And_C/default_project/Debug/./</path>
          <kind>object</kind>
          <file>lcd1602.o</file>
          <name>lcd1602.o</name>
       </input_file>
       <input_file id="fl-5">
-         <path>/home/sofa/Assembly_And_C/default_project copy/Debug/./</path>
+         <path>/home/sofa/Assembly_And_C/default_project/Debug/./</path>
          <kind>object</kind>
          <file>main.o</file>
          <name>main.o</name>
       </input_file>
       <input_file id="fl-6">
-         <path>/home/sofa/Assembly_And_C/default_project copy/Debug/./</path>
+         <path>/home/sofa/Assembly_And_C/default_project/Debug/./</path>
          <kind>object</kind>
          <file>spi.o</file>
          <name>spi.o</name>
       </input_file>
       <input_file id="fl-7">
-         <path>/home/sofa/Assembly_And_C/default_project copy/Debug/./</path>
+         <path>/home/sofa/Assembly_And_C/default_project/Debug/./</path>
          <kind>object</kind>
          <file>uart.o</file>
          <name>uart.o</name>
       </input_file>
       <input_file id="fl-8">
-         <path>/home/sofa/Assembly_And_C/default_project copy/Debug/./ticlang/</path>
+         <path>/home/sofa/Assembly_And_C/default_project/Debug/./ticlang/</path>
          <kind>object</kind>
          <file>startup_mspm0g3507_ticlang.o</file>
          <name>startup_mspm0g3507_ticlang.o</name>
       </input_file>
       <input_file id="fl-13">
-         <path>/home/sofa/Assembly_And_C/default_project copy/Debug/</path>
+         <path>/home/sofa/Assembly_And_C/default_project/Debug/</path>
          <kind>object</kind>
          <file>&lt;internal&gt;</file>
          <name>&lt;internal&gt;</name>
@@ -783,53 +783,53 @@
          <name>.debug_info</name>
          <load_address>0x1117</load_address>
          <run_address>0x1117</run_address>
-         <size>0xaa</size>
+         <size>0xa5</size>
          <alignment>0x0</alignment>
       </object_component>
       <object_component id="oc-84">
          <name>.debug_str</name>
          <load_address>0x0</load_address>
          <run_address>0x0</run_address>
-         <size>0xc0</size>
+         <size>0xbb</size>
          <alignment>0x1</alignment>
          <input_file_ref idref="fl-5"/>
       </object_component>
       <object_component id="oc-38">
          <name>.debug_str</name>
-         <load_address>0xc0</load_address>
-         <run_address>0xc0</run_address>
-         <size>0x12a</size>
+         <load_address>0xbb</load_address>
+         <run_address>0xbb</run_address>
+         <size>0x125</size>
          <alignment>0x1</alignment>
          <input_file_ref idref="fl-8"/>
       </object_component>
       <object_component id="oc-5a">
          <name>.debug_str</name>
-         <load_address>0x1ea</load_address>
-         <run_address>0x1ea</run_address>
+         <load_address>0x1e0</load_address>
+         <run_address>0x1e0</run_address>
          <size>0x3d3</size>
          <alignment>0x1</alignment>
          <input_file_ref idref="fl-2e"/>
       </object_component>
       <object_component id="oc-3a">
          <name>.debug_str</name>
-         <load_address>0x5bd</load_address>
-         <run_address>0x5bd</run_address>
+         <load_address>0x5b3</load_address>
+         <run_address>0x5b3</run_address>
          <size>0x22d</size>
          <alignment>0x1</alignment>
          <input_file_ref idref="fl-32"/>
       </object_component>
       <object_component id="oc-a6">
          <name>.debug_str</name>
-         <load_address>0x7ea</load_address>
-         <run_address>0x7ea</run_address>
+         <load_address>0x7e0</load_address>
+         <run_address>0x7e0</run_address>
          <size>0x147</size>
          <alignment>0x1</alignment>
          <input_file_ref idref="fl-39"/>
       </object_component>
       <object_component id="oc-82">
          <name>.debug_str</name>
-         <load_address>0x931</load_address>
-         <run_address>0x931</run_address>
+         <load_address>0x927</load_address>
+         <run_address>0x927</run_address>
          <size>0xfd</size>
          <alignment>0x1</alignment>
          <input_file_ref idref="fl-3d"/>
@@ -1192,7 +1192,7 @@
          <name>.debug_info</name>
          <load_address>0x0</load_address>
          <run_address>0x0</run_address>
-         <size>0x11c1</size>
+         <size>0x11bc</size>
          <contents>
             <object_component_ref idref="oc-6c"/>
             <object_component_ref idref="oc-19"/>
@@ -1207,7 +1207,7 @@
          <name>.debug_str</name>
          <load_address>0x0</load_address>
          <run_address>0x0</run_address>
-         <size>0xa2e</size>
+         <size>0xa24</size>
          <contents>
             <object_component_ref idref="oc-84"/>
             <object_component_ref idref="oc-38"/>
