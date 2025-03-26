@@ -41,6 +41,7 @@ void OPA0_init();
 void GROUP1_IRQHandler();
 void config_pb1_interrupt();
 void config_pb2_interrupt();
+int celsius_to_fahrenheit(int temp);
 
 //-----------------------------------------------------------------------------
 // Define symbolic constants used by the program
@@ -54,18 +55,18 @@ void config_pb2_interrupt();
 //-----------------------------------------------------------------------------
 
 bool g_SW1_pressed = false;
-bool g_SW2_pressed = true;
+bool g_SW2_pressed = false;
 
 // Define a structure to hold different data types
 
 int main(void) {
   
   uint32_t channel_7_output;
-  uint32_t channel_11_output;
+  uint32_t channel_5_output;
   
   clock_init_40mhz();
   launchpad_gpio_init();
-  OPA0_init();
+
   I2C_init();
   ADC0_init(ADC12_MEMCTL_VRSEL_INTREF_VSSA);
   lcd1602_init();
@@ -77,34 +78,42 @@ int main(void) {
   config_pb2_interrupt();
 
   while (!g_SW1_pressed) {
-    
-    channel_7_output = ADC0_in(ADC12_MEMCTL_CHANSEL_CHAN_7);
-    channel_11_output = ADC0_in(ADC12_MEMCTL_CHANSEL_CHAN_11);
-    uint8_t led_ADC_output = channel_7_output/BIT12_TO_BIT8_DIV;
 
-    msec_delay(100);
-    leds_on(led_ADC_output);
+    channel_5_output = ADC0_in(ADC12_MEMCTL_CHANSEL_CHAN_5);
+    channel_7_output = ADC0_in(ADC12_MEMCTL_CHANSEL_CHAN_7);
+
+    int index = channel_7_output/455;
+    
+    leds_off();
+    for(int led = 0; led<index; led++){
+        led_on(led);
+    }
+
+
+    
     lcd_set_ddram_addr(0x00);
 
     lcd_write_string("ADC: ");
     lcd_write_doublebyte(channel_7_output);
+    
 
     if(g_SW2_pressed){
-
-        int temp = thermistor_calc_temperature(channel_11_output);
+       
+        int temp = thermistor_calc_temperature(channel_5_output);
+        temp = celsius_to_fahrenheit(temp);
         g_SW2_pressed = false;
         lcd_set_ddram_addr(0x40);
         
         lcd_write_string("Temp: ");
         lcd_write_byte(temp);
-        lcd_write_char(176);
+        lcd1602_write(LCD_IIC_ADDRESS, 0xDF ,LCD_DATA_REG);
         lcd_write_string("F");
     }
-
   }
+  
 
   lcd_clear();
-  lcd_write_string("Part 1 End");
+  lcd_write_string("Part 3 End");
   msec_delay(1000);
   lcd_set_display_off();
   leds_off();
@@ -211,3 +220,9 @@ void GROUP1_IRQHandler(void) {
         }
     } while (group_iidx_status != 0);
 }
+
+int celsius_to_fahrenheit(int temp) 
+{ 
+    return ((temp * 9.0 / 5.0) + 32.0); 
+} 
+  

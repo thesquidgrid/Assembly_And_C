@@ -56,10 +56,12 @@ bool g_SW1_pressed = false;
 
 int main(void) {
   uint32_t channel_7_output;
-  
+
+  int ledsOn[8];
+
   clock_init_40mhz();
   launchpad_gpio_init();
-  OPA0_init();
+  
   I2C_init();
   ADC0_init(ADC12_MEMCTL_VRSEL_INTREF_VSSA);
   lcd1602_init();
@@ -71,23 +73,29 @@ int main(void) {
 
 
   while (!g_SW1_pressed) {
-    
+
     channel_7_output = ADC0_in(ADC12_MEMCTL_CHANSEL_CHAN_7);
-    uint8_t led_ADC_output = channel_7_output/BIT12_TO_BIT8_DIV;
+
+    int index = channel_7_output/455;
+    
+    leds_off();
+    for(int led = 0; led<index; led++){
+        led_on(led);
+    }
+
 
     msec_delay(100);
-    leds_on(led_ADC_output);
     lcd_set_ddram_addr(0x00);
 
     lcd_write_string("ADC: ");
     lcd_write_doublebyte(channel_7_output);
+    
   }
 
+
   lcd_clear();
-  lcd_write_string("Part 1 End");
+  lcd_write_string("Part 2 End");
   msec_delay(1000);
-  lcd_set_display_off();
-  leds_off();
   // Endless loop to prevent program from ending
   while (1);
 

@@ -54,7 +54,7 @@ int main(void) {
 
     //Lab code:
     
-    // run_lab4_part1();
+     run_lab4_part1();
     // msec_delay(1000); //pause for visibility
     // run_lab4_part2();
     // run_lab4_part3();
