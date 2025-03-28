@@ -58,7 +58,7 @@ bool g_SW1_pressed = false;
 // Define a structure to hold different data types
 
 int main(void) {
-  uint32_t channel_7;
+  uint32_t lightSensorValue;
   uint16_t threshold = (light - dark) / 2;
   clock_init_40mhz();
   launchpad_gpio_init();
@@ -72,13 +72,13 @@ int main(void) {
 
   while (!g_SW1_pressed) {
     
-    channel_7 = ADC0_in(ADC12_MEMCTL_CHANSEL_CHAN_7);
+    lightSensorValue = ADC0_in(ADC12_MEMCTL_CHANSEL_CHAN_7);
 
     msec_delay(500);
 
     lcd_set_ddram_addr(0x00);
 
-    if (channel_7 > threshold) {
+    if (lightSensorValue > threshold) {
       lcd_write_string(status_light);
     } else {
       lcd_write_string(status_dark);
@@ -87,7 +87,7 @@ int main(void) {
     lcd_set_ddram_addr(0x40);
 
     lcd_write_string("ADC: ");
-    lcd_write_doublebyte(channel_7);
+    lcd_write_doublebyte(lightSensorValue);
   }
 
   lcd_clear();
@@ -136,6 +136,22 @@ void OPA0_init(void) {
 
 
 
+//-----------------------------------------------------------------------------
+// DESCRIPTION:
+//    Configures an interrupt for push button 1 on GPIOB.
+//    This function sets the polarity for a rising edge trigger,
+//    clears any pending interrupt, enables the interrupt, and
+//    sets its priority in the NVIC.
+//
+// INPUT PARAMETERS:
+//  none
+//
+// OUTPUT PARAMETERS:
+//  none
+//
+// RETURN:
+//  none
+// -----------------------------------------------------------------------------
 void config_pb1_interrupt(void){
 
     //CHANGE THESE TO PUSH BUTTON
@@ -147,6 +163,22 @@ void config_pb1_interrupt(void){
     NVIC_EnableIRQ(GPIOB_INT_IRQn);
 
 }
+
+//-----------------------------------------------------------------------------
+// DESCRIPTION:
+//    Handles GPIO interrupts for push button 1.
+//    This function checks the interrupt status for GPIOB,
+//    sets global flags accordingly, and clears the interrupt flags.
+//
+// INPUT PARAMETERS:
+//  none
+//
+// OUTPUT PARAMETERS:
+//  none
+//
+// RETURN:
+//  none
+// -----------------------------------------------------------------------------
 
 void GROUP1_IRQHandler(void) {
     uint32_t group_iidx_status;

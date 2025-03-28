@@ -139,7 +139,22 @@ void OPA0_init(void) {
 } /* OPA0_init */
 
 
-
+//-----------------------------------------------------------------------------
+// DESCRIPTION:
+//    Configures an interrupt for push button 1 on GPIOB.
+//    This function sets the polarity for a rising edge trigger,
+//    clears any pending interrupt, enables the interrupt, and
+//    sets its priority in the NVIC.
+//
+// INPUT PARAMETERS:
+//  none
+//
+// OUTPUT PARAMETERS:
+//  none
+//
+// RETURN:
+//  none
+// -----------------------------------------------------------------------------
 void config_pb1_interrupt(void){
 
     //CHANGE THESE TO PUSH BUTTON
@@ -151,6 +166,22 @@ void config_pb1_interrupt(void){
     NVIC_EnableIRQ(GPIOB_INT_IRQn);
 
 }
+
+//-----------------------------------------------------------------------------
+// DESCRIPTION:
+//    Handles GPIO interrupts for push button 1.
+//    This function checks the interrupt status for GPIOB,
+//    sets global flags accordingly, and clears the interrupt flags.
+//
+// INPUT PARAMETERS:
+//  none
+//
+// OUTPUT PARAMETERS:
+//  none
+//
+// RETURN:
+//  none
+// -----------------------------------------------------------------------------
 
 void GROUP1_IRQHandler(void) {
     uint32_t group_iidx_status;
