@@ -104,6 +104,15 @@
                 "name": "lab8_p3",
                 "resourceId": "/lab8_p3/lab8_p3_main.c"
             }
+        },
+        {
+            "name": "Lab9_p1",
+            "type": "ccs-debug",
+            "request": "launch",
+            "projectInfo": {
+                "name": "Lab9_p1",
+                "resourceId": "/Lab9_p1/lab9_p1_main.c"
+            }
         }
     ]
 }
