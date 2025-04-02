@@ -61,8 +61,8 @@ bool g_SW2_pressed = false;
 
 int main(void) {
   
-  uint32_t channel_7_output;
-  uint32_t channel_5_output;
+  uint32_t pot_output;
+  uint32_t temp_in_C;
   
   clock_init_40mhz();
   launchpad_gpio_init();
@@ -74,15 +74,16 @@ int main(void) {
   led_init();
   led_enable();
   
+
   config_pb1_interrupt();
   config_pb2_interrupt();
 
   while (!g_SW1_pressed) {
 
-    channel_5_output = ADC0_in(ADC12_MEMCTL_CHANSEL_CHAN_5);
-    channel_7_output = ADC0_in(ADC12_MEMCTL_CHANSEL_CHAN_7);
+    temp_in_C = ADC0_in(ADC12_MEMCTL_CHANSEL_CHAN_5);
+    pot_output = ADC0_in(ADC12_MEMCTL_CHANSEL_CHAN_7); //temp
 
-    int index = channel_7_output/455;
+    int index = pot_output/455;
     
     leds_off();
     for(int led = 0; led<index; led++){
@@ -94,19 +95,19 @@ int main(void) {
     lcd_set_ddram_addr(0x00);
 
     lcd_write_string("ADC: ");
-    lcd_write_doublebyte(channel_7_output);
+    lcd_write_doublebyte(pot_output);
     
 
     if(g_SW2_pressed){
        
-        int temp = thermistor_calc_temperature(channel_5_output);
+        int temp = thermistor_calc_temperature(temp_in_C);
         temp = celsius_to_fahrenheit(temp);
         g_SW2_pressed = false;
         lcd_set_ddram_addr(0x40);
         
         lcd_write_string("Temp: ");
         lcd_write_byte(temp);
-        lcd1602_write(LCD_IIC_ADDRESS, 0xDF ,LCD_DATA_REG);
+        lcd1602_write(LCD_IIC_ADDRESS, 0xDF ,LCD_DATA_REG); //displays little dot
         lcd_write_string("F");
     }
   }
@@ -160,10 +161,24 @@ void OPA0_init(void) {
 } /* OPA0_init */
 
 
-
+//-----------------------------------------------------------------------------
+// DESCRIPTION:
+//    Configures an interrupt for push button 1 on GPIOB.
+//    This function sets the polarity for a rising edge trigger,
+//    clears any pending interrupt, enables the interrupt, and
+//    sets its priority in the NVIC.
+//
+// INPUT PARAMETERS:
+//  none
+//
+// OUTPUT PARAMETERS:
+//  none
+//
+// RETURN:
+//  none
+// -----------------------------------------------------------------------------
 void config_pb1_interrupt(void){
 
-    //CHANGE THESE TO PUSH BUTTON
     GPIOB->POLARITY31_16 = GPIO_POLARITY31_16_DIO18_RISE;
     GPIOB->CPU_INT.ICLR = GPIO_CPU_INT_ICLR_DIO18_CLR;
     GPIOB->CPU_INT.IMASK = GPIO_CPU_INT_IMASK_DIO18_SET;
@@ -173,10 +188,24 @@ void config_pb1_interrupt(void){
 
 }
 
-
+//-----------------------------------------------------------------------------
+// DESCRIPTION:
+//    Configures an interrupt for push button 2 on GPIOA.
+//    This function sets the polarity for a rising edge trigger,
+//    clears any pending interrupt, enables the interrupt, and
+//    sets its priority in the NVIC.
+//
+// INPUT PARAMETERS:
+//  none
+//
+// OUTPUT PARAMETERS:
+//  none
+//
+// RETURN:
+//  none
+// -----------------------------------------------------------------------------
 void config_pb2_interrupt(void){
 
-    //CHANGE THESE TO PUSH BUTTON
     GPIOA->POLARITY15_0 = GPIO_POLARITY15_0_DIO15_RISE;
     GPIOA->CPU_INT.ICLR = GPIO_CPU_INT_ICLR_DIO15_CLR;
     GPIOA->CPU_INT.IMASK = GPIO_CPU_INT_IMASK_DIO15_SET;
@@ -186,6 +215,21 @@ void config_pb2_interrupt(void){
 
 }
 
+//-----------------------------------------------------------------------------
+// DESCRIPTION:
+//    Handles GPIO interrupts for push buttons 1 and 2.
+//    This function checks the interrupt status for GPIOA and GPIOB,
+//    sets global flags accordingly, and clears the interrupt flags.
+//
+// INPUT PARAMETERS:
+//  none
+//
+// OUTPUT PARAMETERS:
+//  none
+//
+// RETURN:
+//  none
+// -----------------------------------------------------------------------------
 void GROUP1_IRQHandler(void) {
     uint32_t group_iidx_status;
     uint32_t gpio_mis;
@@ -194,35 +238,44 @@ void GROUP1_IRQHandler(void) {
 
         switch (group_iidx_status) {
 
-            // Interrupt from GPIOA (push button 2)
             case CPUSS_INT_GROUP_IIDX_STAT_INT0:
                 gpio_mis = GPIOA->CPU_INT.MIS;
                 if ((gpio_mis & GPIO_CPU_INT_MIS_DIO15_MASK) == GPIO_CPU_INT_MIS_DIO15_SET) {
                     g_SW2_pressed = true;
-                    // Manually clear bit to acknowledge interrupt
                     GPIOA->CPU_INT.ICLR = GPIO_CPU_INT_ICLR_DIO15_CLR;
                 }
                 break;
 
-            // Interrupt from GPIOB (Push Button 1)
             case CPUSS_INT_GROUP_IIDX_STAT_INT1:
                 gpio_mis = GPIOB->CPU_INT.MIS;
                 if ((gpio_mis & GPIO_CPU_INT_MIS_DIO18_MASK) == GPIO_CPU_INT_MIS_DIO18_SET) {
                     g_SW1_pressed = true;
-                    // Manually clear bit to acknowledge interrupt
                     GPIOB->CPU_INT.ICLR = GPIO_CPU_INT_ICLR_DIO18_CLR;
                 }
                 break;
 
-            // Unexpected interrupt
             default:
                 break;
         }
     } while (group_iidx_status != 0);
 }
 
+//-----------------------------------------------------------------------------
+// DESCRIPTION:
+//    Converts a temperature from Celsius to Fahrenheit.
+//    Uses the formula: (temp * 9/5) + 32.
+//
+// INPUT PARAMETERS:
+//    int temp - Temperature in Celsius.
+//
+// OUTPUT PARAMETERS:
+//    none
+//
+// RETURN:
+//    int - Temperature in Fahrenheit.
+// -----------------------------------------------------------------------------
 int celsius_to_fahrenheit(int temp) 
 { 
     return ((temp * 9.0 / 5.0) + 32.0); 
-} 
-  
+}
+
