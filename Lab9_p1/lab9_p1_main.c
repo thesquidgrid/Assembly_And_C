@@ -82,6 +82,7 @@ int main(void) {
 
    states = MOTOR_OFF1;
    while (!g_SW1_pressed) { //while switch 2 is not pressed
+      g_SW1_pressed = false;
       switch (states) {
       case MOTOR_OFF1:
 
@@ -117,7 +118,7 @@ int main(void) {
          break;
       }
       while (!g_SW2_pressed); //while switch one is not pressed. 
-      g_SW1_pressed = false;
+      
    }
    
    /*
