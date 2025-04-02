@@ -77,6 +77,9 @@ int main(void) {
    motor0_pwm_enable();
    motor0_set_pwm_dc(0x10);
 
+   config_pb1_interrupt();
+   config_pb2_interrupt();
+
    states = MOTOR_OFF1;
    while (!g_SW1_pressed) { //while switch 2 is not pressed
       switch (states) {
@@ -114,8 +117,10 @@ int main(void) {
          break;
       }
       while (!g_SW2_pressed); //while switch one is not pressed. 
+      g_SW1_pressed = false;
    }
-
+   
+   /*
    // Create an endless loop for demotration purposes 
    while (1) {
       switch_value = dipsw_read();
@@ -127,19 +132,19 @@ int main(void) {
       if ((switch_value & 0x3) == 0x1) {
          led_on(LED_BAR_LD1_IDX);
          led_off(LED_BAR_LD2_IDX);
-      } /* if */
+      } 
 
       // if SW1 = "xx10" then spin motor CW 
       else if ((switch_value & 0x3) == 0x2) {
          led_off(LED_BAR_LD1_IDX);
          led_on(LED_BAR_LD2_IDX);
-      } /* else if */
+      } 
       // else do not enable motor 
       else {
          led_off(LED_BAR_LD1_IDX);
          led_off(LED_BAR_LD2_IDX);
-      } /* else */
-   } /* while */
+      } 
+   } */
 } /* main */
 
 //-----------------------------------------------------------------------------
