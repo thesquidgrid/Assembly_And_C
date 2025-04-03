@@ -3,7 +3,7 @@
    <banner>TI ARM Clang Linker PC v4.0.0.LTS</banner>
    <copyright>Copyright (c) 1996-2018 Texas Instruments Incorporated</copyright>
    <command_line>C:\ti\ccstheia151\ccs\tools\compiler\ti-cgt-armllvm_4.0.0.LTS\bin\tiarmlnk -IC:\ti\ccstheia151\ccs\tools\compiler\ti-cgt-armllvm_4.0.0.LTS\lib -o default_project.out -mdefault_project.map --heap_size=0x800 --stack_size=512 -iC:/ti/mspm0_sdk_2_04_00_06/source -iC:/Users/lbuch/workspace_ccstheia/default_project -iC:/Users/lbuch/workspace_ccstheia/default_project/Debug/syscfg -iC:/ti/ccstheia151/ccs/tools/compiler/ti-cgt-armllvm_4.0.0.LTS/lib --diag_wrap=off --display_error_number --warn_sections --xml_link_info=default_project_linkInfo.xml --rom_model ./LaunchPad.o ./adc.o ./clock.o ./lcd1602.o ./main.o ./spi.o ./uart.o ./ticlang/startup_mspm0g3507_ticlang.o ../mspm0g3507.cmd -llibc.a --start-group -llibc++.a -llibc++abi.a -llibc.a -llibsys.a -llibsysbm.a -llibclang_rt.builtins.a -llibclang_rt.profile.a --end-group --cg_opt_level=0</command_line>
-   <link_time>0x67ed7bc3</link_time>
+   <link_time>0x67ee050e</link_time>
    <link_errors>0x0</link_errors>
    <output_file>C:\Users\lbuch\workspace_ccstheia\default_project\Debug\default_project.out</output_file>
    <entry_point>
@@ -763,7 +763,7 @@
          <alignment>0x1</alignment>
          <input_file_ref idref="fl-2f"/>
       </object_component>
-      <object_component id="oc-68">
+      <object_component id="oc-69">
          <name>.debug_info</name>
          <load_address>0xfe4</load_address>
          <run_address>0xfe4</run_address>
@@ -834,7 +834,7 @@
          <alignment>0x1</alignment>
          <input_file_ref idref="fl-3c"/>
       </object_component>
-      <object_component id="oc-6d">
+      <object_component id="oc-6e">
          <name>.debug_frame</name>
          <load_address>0x0</load_address>
          <run_address>0x0</run_address>
@@ -866,7 +866,7 @@
          <alignment>0x4</alignment>
          <input_file_ref idref="fl-32"/>
       </object_component>
-      <object_component id="oc-88">
+      <object_component id="oc-89">
          <name>.debug_frame</name>
          <load_address>0x114</load_address>
          <run_address>0x114</run_address>
@@ -874,7 +874,7 @@
          <alignment>0x4</alignment>
          <input_file_ref idref="fl-3c"/>
       </object_component>
-      <object_component id="oc-6e">
+      <object_component id="oc-6d">
          <name>.debug_line</name>
          <load_address>0x0</load_address>
          <run_address>0x0</run_address>
@@ -906,7 +906,7 @@
          <alignment>0x1</alignment>
          <input_file_ref idref="fl-2f"/>
       </object_component>
-      <object_component id="oc-69">
+      <object_component id="oc-68">
          <name>.debug_line</name>
          <load_address>0xaa2</load_address>
          <run_address>0xaa2</run_address>
@@ -914,7 +914,7 @@
          <alignment>0x1</alignment>
          <input_file_ref idref="fl-32"/>
       </object_component>
-      <object_component id="oc-89">
+      <object_component id="oc-88">
          <name>.debug_line</name>
          <load_address>0xae0</load_address>
          <run_address>0xae0</run_address>
@@ -1198,7 +1198,7 @@
             <object_component_ref idref="oc-19"/>
             <object_component_ref idref="oc-30"/>
             <object_component_ref idref="oc-1b"/>
-            <object_component_ref idref="oc-68"/>
+            <object_component_ref idref="oc-69"/>
             <object_component_ref idref="oc-86"/>
             <object_component_ref idref="oc-ff"/>
          </contents>
@@ -1223,11 +1223,11 @@
          <run_address>0x0</run_address>
          <size>0x144</size>
          <contents>
-            <object_component_ref idref="oc-6d"/>
+            <object_component_ref idref="oc-6e"/>
             <object_component_ref idref="oc-34"/>
             <object_component_ref idref="oc-51"/>
             <object_component_ref idref="oc-6a"/>
-            <object_component_ref idref="oc-88"/>
+            <object_component_ref idref="oc-89"/>
          </contents>
       </logical_group>
       <logical_group id="lg-e6" display="never" color="cyan">
@@ -1236,12 +1236,12 @@
          <run_address>0x0</run_address>
          <size>0xb49</size>
          <contents>
-            <object_component_ref idref="oc-6e"/>
+            <object_component_ref idref="oc-6d"/>
             <object_component_ref idref="oc-33"/>
             <object_component_ref idref="oc-5b"/>
             <object_component_ref idref="oc-3b"/>
-            <object_component_ref idref="oc-69"/>
-            <object_component_ref idref="oc-89"/>
+            <object_component_ref idref="oc-68"/>
+            <object_component_ref idref="oc-88"/>
          </contents>
       </logical_group>
       <logical_group id="lg-e8" display="never" color="cyan">
