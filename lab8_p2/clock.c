@@ -6,7 +6,7 @@
 //         VERSION:  0.1
 //
 //       FILE NAME:  clock.c
-//
+// 
 //-----------------------------------------------------------------------------
 // DESCRIPTION
 //    This file contains a collection of functions for initializing and 
