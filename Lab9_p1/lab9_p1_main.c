@@ -46,9 +46,6 @@ void run_lab9_part1();
 //----------------------------------------------------------------------------- 
 // Define system clock and SysTick period
 //----------------------------------------------------------------------------- 
-#define MSPM0_CLOCK_FREQUENCY (40e6) // System clock frequency: 40MHz
-#define SYST_TICK_PERIOD (10.25E-3)  // SysTick interrupt period: 10.25ms
-#define SYST_TICK_PERIOD_COUNT (SYST_TICK_PERIOD * MSPM0_CLOCK_FREQUENCY)
 
 //-----------------------------------------------------------------------------
 // Define symbolic constants used by the program
