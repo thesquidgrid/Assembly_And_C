@@ -81,7 +81,7 @@ int main(void) {
   while (!g_SW1_pressed) {
 
     temp_in_C = ADC0_in(ADC12_MEMCTL_CHANSEL_CHAN_5);
-    pot_output = ADC0_in(ADC12_MEMCTL_CHANSEL_CHAN_7); //temp
+    pot_output = ADC0_in(ADC12_MEMCTL_CHANSEL_CHAN_7); 
 
     int index = pot_output/455;
     

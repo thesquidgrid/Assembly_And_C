@@ -1,58 +1,55 @@
 //*****************************************************************************
 //*****************************    C Source Code    ***************************
 //*****************************************************************************
-//  DESIGNER NAME:  TBD
-//
-//       LAB NAME:  TBD
-//
-//      FILE NAME:  main.c
+//  DESIGNER NAME:  Sophia Buchman
+//  LAB NAME:  lab 9
+//  FILE NAME:  lab9_p2_main.c
 //
 //-----------------------------------------------------------------------------
-//
 // DESCRIPTION:
-//    This program serves as a ... 
+//    This program serves as a demonstration of various MSP430 functionalities.
+//    It reads temperature from a thermistor, converts the value to Fahrenheit, 
+//    adjusts motor speed based on a threshold, and displays values on an LCD.
 //
 //*****************************************************************************
 //*****************************************************************************
 
 //-----------------------------------------------------------------------------
-// Loads standard C include files
+// Standard C include files
 //-----------------------------------------------------------------------------
 #include <stdio.h>
 
 //-----------------------------------------------------------------------------
-// Loads MSP launchpad board support macros and definitions
+// MSP430 LaunchPad board support macros and definitions
 //-----------------------------------------------------------------------------
 #include <ti/devices/msp/msp.h>
+
+#include "LaunchPad.h"
 #include "clock.h"
+#include "adc.h"
+#include "uart.h"
 #include "lcd1602.h"
 
-
 //-----------------------------------------------------------------------------
-// Define function prototypes used by the program
+// Function prototypes
 //-----------------------------------------------------------------------------
 int celsius_to_fahrenheit(int temp);
-void GROUP1_IRQHandler();
-void config_pb1_interrupt();
-void config_pb2_interrupt();
-//-----------------------------------------------------------------------------
-// Define symbolic constants used by the program
-//-----------------------------------------------------------------------------
-
+void GROUP1_IRQHandler(void);
+void config_pb1_interrupt(void);
+void config_pb2_interrupt(void);
 
 //-----------------------------------------------------------------------------
-// Define global variables and structures here.
-// NOTE: when possible avoid using global variables
+// Global variables
 //-----------------------------------------------------------------------------
 bool g_SW1_pressed = false;
 bool g_SW2_pressed = false;
 
-// Define a structure to hold different data types
-
-int main(void)
-{
-
-    clock_init_40mhz();
+//-----------------------------------------------------------------------------
+// Main function
+//-----------------------------------------------------------------------------
+int main(void) {
+   // Initialize peripherals
+   clock_init_40mhz();
    launchpad_gpio_init();
    dipsw_init();
    led_init();
@@ -60,41 +57,76 @@ int main(void)
    I2C_init();
    lcd1602_init();
    keypad_init();
-   // configure ADC 
+
+   // Configure ADC
    ADC0_init(ADC12_MEMCTL_VRSEL_INTREF_VSSA);
-   // Configure motor0 with 50kHz PWM, 0% duty cycle 
+
+   // Configure motor0 with 50kHz PWM, 0% duty cycle
    motor0_init();
    motor0_pwm_init(4000, 0);
    motor0_pwm_enable();
+
+   // Configure interrupts for push buttons
    config_pb1_interrupt();
    config_pb2_interrupt();
 
-   int temp = celsius_to_fahrenheit(ADC0_in(ADC12_MEMCTL_CHANSEL_CHAN_5));
-   uint8_t threshold = 70;
-   lcd_set_ddram_addr(0x00);
-   lcd_write_string("Temperature");
-   lcd_set_ddram_addr(0x12);
-   lcd1602_write(LCD_IIC_ADDRESS, 0xDF ,LCD_DATA_REG); //displays little dot
-   lcd_write_string("F");
-   lcd_set_ddram_addr(0x40);
-   lcd_write_string("Motor Speed:");
-   lcd_set_ddram_addr(0x4A); 
-   lcd1602_write(LCD_IIC_ADDRESS, 0x25 ,LCD_DATA_REG);
+   uint8_t speed = 25;
+   uint8_t threshold = 81;
+   int temp_in_C = 0;
+   int temp = 0;
 
-   while(!g_SW1_pressed){
-    msec_delay(250); //delay for temp sensor stabilization
+   // Display initial messages on LCD
+   lcd_set_ddram_addr(0x00);
+   lcd_write_string(" TEMP  = ");
+   lcd_set_ddram_addr(0x40);
+   lcd_write_string(" SPEED = ");
+
+   // Initial LED state
+   led_off(LED_BAR_LD1_IDX);
+   led_on(LED_BAR_LD2_IDX);
+
+   // Main loop
+   while (!g_SW1_pressed) {
+      // Read temperature from ADC and convert
+      temp_in_C = ADC0_in(ADC12_MEMCTL_CHANSEL_CHAN_5);
+      temp = thermistor_calc_temperature(temp_in_C);
+      temp = celsius_to_fahrenheit(temp);
+
+      // Display temperature on LCD
+      lcd_set_ddram_addr(0x0A);
+      lcd_write_byte(temp);
+      lcd1602_write(LCD_IIC_ADDRESS, 0xDF, LCD_DATA_REG); // Displays small dot
+      lcd_write_string("F");
+
+      // Adjust motor speed based on temperature
+      lcd_set_ddram_addr(0x48);
+      if (temp > threshold) {
+         speed = 50;
+      } else {
+         speed = 25;
+      }
+      motor0_set_pwm_dc(speed);
+
+      // Display speed on LCD
+      lcd_write_byte(speed);
+      lcd1602_write(LCD_IIC_ADDRESS, 0x25, LCD_DATA_REG); // Displays percentage symbol
+
+      msec_delay(250); // Delay for temperature sensor stabilization
    }
- // Endless loop to prevent program from ending
- while (1);
+
+   // Stop the program and display "Program Stopped"
+   led_off(LED_BAR_LD1_IDX);
+   led_off(LED_BAR_LD2_IDX);
+   motor0_set_pwm_dc(0);
+   lcd_clear();
+   lcd_write_string("Program Stopped");
+   msec_delay(1000);
+   led_disable();
+   lcd_set_display_off();
+   // Infinite loop to prevent program from ending
+   while (1);
 
 } /* main */
-
-
-int celsius_to_fahrenheit(int temp) 
-{ 
-    return ((temp * 9.0 / 5.0) + 32.0); 
-}
-
 
 //-----------------------------------------------------------------------------
 // DESCRIPTION:
@@ -198,3 +230,20 @@ void GROUP1_IRQHandler(void) {
    } while (group_iidx_status != 0);
 }
 
+//-----------------------------------------------------------------------------
+// DESCRIPTION:
+//    Converts a temperature from Celsius to Fahrenheit.
+//    Uses the formula: (temp * 9/5) + 32.
+//
+// INPUT PARAMETERS:
+//    int temp - Temperature in Celsius.
+//
+// OUTPUT PARAMETERS:
+//    none
+//
+// RETURN:
+//    int - Temperature in Fahrenheit.
+// -----------------------------------------------------------------------------
+int celsius_to_fahrenheit(int temp) {
+   return ((temp * 9.0 / 5.0) + 32.0);
+}

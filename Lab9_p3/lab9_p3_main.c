@@ -35,18 +35,15 @@
 void GROUP1_IRQHandler(void);
 void config_pb1_interrupt(void);
 void config_pb2_interrupt(void);
-void run_lab9_part1(void);
+
 
 //-----------------------------------------------------------------------------
 // Define symbolic constants used by the program
 //-----------------------------------------------------------------------------
-enum States {
-   MOTOR_OFF1,
-   MOTOR_CW,
-   MOTOR_OFF2,
-   MOTOR_CCW
-} states;
 
+#define servoCount_Min 100
+#define servoCount_Max 500
+#define maxADCVal 1024
 //-----------------------------------------------------------------------------
 // Global variables
 //-----------------------------------------------------------------------------
@@ -57,8 +54,8 @@ bool g_SW2_pressed = false;
 // Main function
 //-----------------------------------------------------------------------------
 int main(void) {
-   uint16_t adc_pot_value = 0;
-   uint8_t switch_value = 1;
+   uint16_t pot_output = 0;
+   uint16_t servoCount = 0;
 
    // Initialize peripherals
    clock_init_40mhz();
@@ -79,9 +76,18 @@ int main(void) {
    // Configure push button interrupts
    config_pb1_interrupt();
    config_pb2_interrupt();
+   while (!g_SW1_pressed) {
+   pot_output = ADC0_in(ADC12_MEMCTL_CHANSEL_CHAN_7); 
+   pot_output = pot_output >> 2; 
+   servoCount = ((pot_output * (servoCount_Max-servoCount_Min)) / maxADCVal) + servoCount_Min;
+   motor0_set_pwm_count(servoCount);
+   msec_delay(250);
 
+   }
+
+   lcd_clear();
    // Run lab 9 part 1
-   run_lab9_part1();
+   
 
   
    while (1);
@@ -90,6 +96,7 @@ int main(void) {
 //-----------------------------------------------------------------------------
 // Run Lab 9 Part 1 - Motor Control and Speed Adjustment
 //-----------------------------------------------------------------------------
+/*
 void run_lab9_part1(void) {
    int motor_speed = 20;
    int counter = 0;
@@ -155,6 +162,7 @@ void run_lab9_part1(void) {
    led_disable();
    lcd_set_display_off();
 }
+*/
 
 //-----------------------------------------------------------------------------
 // DESCRIPTION:
