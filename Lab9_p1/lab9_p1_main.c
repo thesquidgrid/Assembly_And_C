@@ -40,7 +40,7 @@
 void GROUP1_IRQHandler();
 void config_pb1_interrupt();
 void config_pb2_interrupt();
-void msp_printf(char* buffer, unsigned int value);
+void run_lab9_part1();
 
 
 //----------------------------------------------------------------------------- 
@@ -72,7 +72,7 @@ bool g_SW2_pressed = false;
 int main(void) {
    uint16_t adc_pot_value = 0;
    uint8_t switch_value = 1;
-   int motor_speed = 50;
+   
    // Configure the launchpad boards 
    clock_init_40mhz();
    launchpad_gpio_init();
@@ -92,15 +92,25 @@ int main(void) {
    config_pb2_interrupt();
 
    
+   run_lab9_part1();
+   while(1);
+   
+}
+
+void run_lab9_part1(void)
+{
+   int motor_speed = 50;
    int counter = 0;
    lcd_clear();
    lcd_set_ddram_addr(0x00);
    lcd_write_string("Motor Speed:");
    lcd_set_ddram_addr(LCD_CHAR_POSITION_12); 
+   lcd_write_byte(motor_speed);
+   lcd1602_write(LCD_IIC_ADDRESS, 0x25 ,LCD_DATA_REG);
    states = MOTOR_OFF1;
 
    
-   while (g_SW1_pressed == false) { //while switch 2 is not pressed
+   while (g_SW1_pressed == false) { //while switch 1 is not pressed
       switch (states) {
         case MOTOR_OFF1:
         led_off(LED_BAR_LD1_IDX);
@@ -127,12 +137,11 @@ int main(void) {
         break;
 }
       g_SW2_pressed = false;
-      msp_printf("entering while loop for switch 2", 0);
-      while (!g_SW2_pressed){
+      while ((!g_SW2_pressed) && (!g_SW1_pressed)){
         
         msec_delay(50);
         motor_speed = keypad_scan();
-        if((motor_speed != 0x00) && (motor_speed != 0x10)){
+        if((motor_speed != 0x10)){
             
             lcd_set_ddram_addr(LCD_CHAR_POSITION_12);
             motor_speed = motor_speed * (100/16);
@@ -140,13 +149,16 @@ int main(void) {
             lcd_write_byte(motor_speed);
             lcd1602_write(LCD_IIC_ADDRESS, 0x25 ,LCD_DATA_REG);
         }
-      }; //while switch one is not pressedd.
-      msec_delay(300); 
+      }; 
+      msec_delay(100); 
    }
 
-   while(1);
+   motor0_set_pwm_dc(0); //turn motor off
+   led_off(LED_BAR_LD1_IDX);
+   led_off(LED_BAR_LD2_IDX);
+   lcd_clear();
+   lcd_write_string("Program Stopped");
 }
-
 //-----------------------------------------------------------------------------
 // DESCRIPTION:
 //    Configures an interrupt for push button 1 on GPIOB.
