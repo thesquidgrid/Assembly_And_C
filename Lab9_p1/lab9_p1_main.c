@@ -70,13 +70,12 @@ int main(void) {
    lcd1602_init();
    keypad_init();
 
-   // Configure ADC and motor
    ADC0_init(ADC12_MEMCTL_VRSEL_INTREF_VSSA);
    motor0_init();
    motor0_pwm_init(4000, 0);
    motor0_pwm_enable();
 
-   // Configure push button interrupts
+   
    config_pb1_interrupt();
    config_pb2_interrupt();
 
@@ -93,8 +92,9 @@ int main(void) {
 void run_lab9_part1(void) {
    int motor_speed = 20;
    int counter = 0;
+   bool done = false;
 
-   //write to lcd
+   
    lcd_clear();
    lcd_set_ddram_addr(0x00);
    lcd_write_string("Motor Speed:");
@@ -102,9 +102,9 @@ void run_lab9_part1(void) {
    lcd_write_byte(motor_speed);
    lcd1602_write(LCD_IIC_ADDRESS, 0x25, LCD_DATA_REG);
 
-   states = MOTOR_OFF1; //set state
-   motor0_set_pwm_dc(motor_speed); //set initial motor speed
-   while (!g_SW1_pressed) { // Wait for switch 1 press
+   states = MOTOR_OFF1;
+   motor0_set_pwm_dc(motor_speed); 
+   while (!done) { 
       switch (states) {
          case MOTOR_OFF1:
             led_off(LED_BAR_LD1_IDX);
@@ -132,16 +132,20 @@ void run_lab9_part1(void) {
       }
 
       g_SW2_pressed = false;
-      while (!g_SW2_pressed && !g_SW1_pressed) {
+      while ((!g_SW2_pressed && !g_SW1_pressed)) {
          msec_delay(50);
          motor_speed = keypad_scan(); //poll until there is a keypad press
          if (motor_speed != 0x10) { 
             lcd_set_ddram_addr(LCD_CHAR_POSITION_12);
             motor_speed = motor_speed * (100 / 16);
-            motor0_set_pwm_dc(motor_speed); //set motor speed to keypad input
+            motor0_set_pwm_dc(motor_speed); 
             lcd_write_byte(motor_speed);
-            lcd1602_write(LCD_IIC_ADDRESS, 0x25, LCD_DATA_REG); // Display %
+            lcd1602_write(LCD_IIC_ADDRESS, 0x25, LCD_DATA_REG);
          }
+    
+      if(g_SW1_pressed){
+        done = true;
+      }
       }
       msec_delay(100);
    }

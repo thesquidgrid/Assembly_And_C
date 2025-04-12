@@ -48,7 +48,7 @@ bool g_SW2_pressed = false;
 // Main function
 //-----------------------------------------------------------------------------
 int main(void) {
-   // Initialize peripherals
+   
    clock_init_40mhz();
    launchpad_gpio_init();
    dipsw_init();
@@ -58,15 +58,14 @@ int main(void) {
    lcd1602_init();
    keypad_init();
 
-   // Configure ADC
    ADC0_init(ADC12_MEMCTL_VRSEL_INTREF_VSSA);
 
-   // Configure motor0 with 50kHz PWM, 0% duty cycle
+ 
    motor0_init();
    motor0_pwm_init(4000, 0);
    motor0_pwm_enable();
 
-   // Configure interrupts for push buttons
+  
    config_pb1_interrupt();
    config_pb2_interrupt();
 
@@ -74,32 +73,31 @@ int main(void) {
    uint8_t threshold = 81;
    int temp_in_C = 0;
    int temp = 0;
-
-   // Display initial messages on LCD
+   bool done = false;
+ 
    lcd_set_ddram_addr(0x00);
    lcd_write_string(" TEMP  = ");
    lcd_set_ddram_addr(0x40);
    lcd_write_string(" SPEED = ");
 
-   // Initial LED state
+   
    led_off(LED_BAR_LD1_IDX);
    led_on(LED_BAR_LD2_IDX);
-
-   // Main loop
-   while (!g_SW1_pressed) {
-      // Read temperature from ADC and convert
+  
+   while (!done) {
+      
       temp_in_C = ADC0_in(ADC12_MEMCTL_CHANSEL_CHAN_5);
       temp = thermistor_calc_temperature(temp_in_C);
       temp = celsius_to_fahrenheit(temp);
 
-      // Display temperature on LCD
-      lcd_set_ddram_addr(0x0A);
+      
+      lcd_set_ddram_addr(LCD_LINE1_ADDR + LCD_CHAR_POSITION_10);
       lcd_write_byte(temp);
-      lcd1602_write(LCD_IIC_ADDRESS, 0xDF, LCD_DATA_REG); // Displays small dot
+      lcd1602_write(LCD_IIC_ADDRESS, 0xDF, LCD_DATA_REG); 
       lcd_write_string("F");
 
-      // Adjust motor speed based on temperature
-      lcd_set_ddram_addr(0x48);
+      
+      lcd_set_ddram_addr(LCD_LINE2_ADDR + LCD_CHAR_POSITION_10);
       if (temp > threshold) {
          speed = 50;
       } else {
@@ -107,14 +105,18 @@ int main(void) {
       }
       motor0_set_pwm_dc(speed);
 
-      // Display speed on LCD
+      
       lcd_write_byte(speed);
-      lcd1602_write(LCD_IIC_ADDRESS, 0x25, LCD_DATA_REG); // Displays percentage symbol
+      lcd1602_write(LCD_IIC_ADDRESS, 0x25, LCD_DATA_REG); 
 
-      msec_delay(250); // Delay for temperature sensor stabilization
+      msec_delay(250);
+
+      if (g_SW1_pressed) {
+         done = true;
+      }
    }
 
-   // Stop the program and display "Program Stopped"
+   
    led_off(LED_BAR_LD1_IDX);
    led_off(LED_BAR_LD2_IDX);
    motor0_set_pwm_dc(0);
@@ -123,7 +125,7 @@ int main(void) {
    msec_delay(1000);
    led_disable();
    lcd_set_display_off();
-   // Infinite loop to prevent program from ending
+   
    while (1);
 
 } /* main */
