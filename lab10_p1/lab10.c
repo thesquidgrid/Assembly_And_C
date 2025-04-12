@@ -20,6 +20,9 @@
 //-----------------------------------------------------------------------------
 #include <stdio.h>
 
+#define enter (char) '\r'
+#define backspace (char) '\b'
+
 //-----------------------------------------------------------------------------
 // Loads MSP launchpad board support macros and definitions
 //-----------------------------------------------------------------------------
@@ -37,7 +40,9 @@
 
 int main_uart_lcd_demo(void) {
    char character;
-   // Configure the launchpad boards clock_init_40mhz(); launchpad_gpio_init(); 
+   // Configure the launchpad boards 
+   clock_init_40mhz(); 
+   launchpad_gpio_init(); 
    // Configure I2C 
    I2C_init();
    // Configure LCD 
@@ -46,18 +51,18 @@ int main_uart_lcd_demo(void) {
    UART_init(115200);
    // Create an endless loop for demonstration purposes 
    lcd_write_string("NAME:");
-   char currentChar = '';
+   char currentChar = ' ';
    uint8_t currentPositon = 0;
-   while (currentChar != '/0') {
+   while (currentChar != '\0') {
       // wait for character to enter UART character 
       currentChar = UART_in_char();
       // echo character back to UART 
       
       UART_out_char(character);
-      // Write character to LCD 
-      if(currentChar == '/r'){
-        currentChar = '/0'
-      } else if(currentChar == 8){
+      
+      if(currentChar == enter){
+        currentChar = '\0';
+      } else if(currentChar == backspace){
         currentPositon--;
         lcd_set_ddram_addr(currentPositon);
         currentChar = ' ';
@@ -68,4 +73,5 @@ int main_uart_lcd_demo(void) {
 
    lcd_set_ddram_addr(LCD_LINE_NUM_2);
    lcd_write_string("Program Done");
+   while(1);
 } /* main */
