@@ -45,12 +45,27 @@ int main_uart_lcd_demo(void) {
    // Configure the UART 
    UART_init(115200);
    // Create an endless loop for demonstration purposes 
-   while (1) {
+   lcd_write_string("NAME:");
+   char currentChar = '';
+   uint8_t currentPositon = 0;
+   while (currentChar != '/0') {
       // wait for character to enter UART character 
-      UART_in_char();
+      currentChar = UART_in_char();
       // echo character back to UART 
+      
       UART_out_char(character);
       // Write character to LCD 
-      lcd_write_char(character); 
+      if(currentChar == '/r'){
+        currentChar = '/0'
+      } else if(currentChar == 8){
+        currentPositon--;
+        lcd_set_ddram_addr(currentPositon);
+        currentChar = ' ';
+      }
+      lcd_write_char(currentChar); 
+      currentPositon++;
    } /* while */
+
+   lcd_set_ddram_addr(LCD_LINE_NUM_2);
+   lcd_write_string("Program Done");
 } /* main */
