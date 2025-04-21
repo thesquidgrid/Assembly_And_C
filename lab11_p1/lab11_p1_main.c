@@ -30,10 +30,12 @@
 #include "LaunchPad.h"
 #include "lcd1602.h"
 #include "uart.h"
+#include <math.h>
 
 void msp_printf(char * buffer, unsigned int value);
 bool is_valid_option(char c);
 void printMenu(void);
+int power(int base, unsigned int exp);
 
 
 int main(void) {
@@ -43,7 +45,7 @@ int main(void) {
    lcd1602_init();
    UART_init(115200);
    spi1_init();
-   spi1_write_data(255);
+   spi1_write_data(3);
    spi1_read_data();
 
    char currentChar = ' ';
@@ -51,7 +53,10 @@ int main(void) {
    uint32_t temp = 0;
    char dataSend_char = 'o';
    int dataSend_int = 0;
-   seg7_hex(seg7Counter, 0);
+   lcd_write_string("SEND: ");
+   lcd_set_ddram_addr(0x40);
+   lcd_write_string("RECV: ");
+  
 
    while (currentChar != '4') {
       printMenu();
@@ -67,30 +72,55 @@ int main(void) {
 
       switch (currentChar) {
          case '1':
+            //reset values.
+            dataSend_char = 'm';
+            dataSend_int = 0;
+
+                        
             msp_printf("\nWhat value would you like to input (between 0-255):\t", 0);
             
-            uint8_t counter = 0;
-            while((dataSend_char != enter) || (counter > 2)){
+            int counter = 2;
+            while((dataSend_char != enter) && (counter >= 0)){
               dataSend_char = UART_in_char();
-              UART_out_char(dataSend_char); 
-              dataSend_int = (dataSend_char - '0') * (10^counter);
-              counter++;
+              UART_out_char(dataSend_char);
+
+              if(dataSend_char != enter){
+                uint8_t multiplier = power(10, counter);
+                //add string to uint16 here
+                uint8_t inputVal = (dataSend_char - '0'); //converts from ascii to integer.
+                dataSend_int = (inputVal * multiplier) +  dataSend_int;
+                counter--;
+              }
+            }
+
+            if(dataSend_char == enter){
+                int multiplier = power(10, counter + 1);
+                dataSend_int = dataSend_int / multiplier;
+            }
+
+            if (dataSend_int > 255) {
+                dataSend_int = 0;
+                msp_printf("\nERROR: invalid data entered.", 0);
+                msp_printf("\nSPI data set to 0.", 0);
             }
 
             msp_printf("\n", 0);
-        
-            // while(dataSend_int < 0 || dataSend_int > 255){
-            //     msp_printf("\nInvalid Input. Try again: ", 0);
-            //     dataSend = UART_in_char();
-            // }
+            
             break;
 
          case '2':
+            GPIOA->DOUT31_0[] //look at launchpad.c on hwo to do this. need RCLK strobbed low
             spi1_write_data(dataSend_int);
+            lcd_set_ddram_addr(LCD_LINE1_ADDR + LCD_CHAR_POSITION_5);
+            lcd_write_byte(dataSend_int);
+            uint8_t dataRecivedBack = spi1_read_data();
+            lcd_set_ddram_addr(LCD_LINE2_ADDR + LCD_CHAR_POSITION_5);
+            lcd_write_byte(dataRecivedBack);
+            
             break;
 
          case '3':
-            spi1_read_data();
+                        GPIOA->DOUT31_0[] //look at launchpad.c on hwo to do this. need RCLK strobbed high
             break;
 
          case '4':
@@ -169,3 +199,12 @@ void printMenu(void) {
    msp_printf(" 4. End Program\r\n", 0);
    msp_printf("Enter your selection: ", 0);
 }
+
+
+// from https://stackoverflow.com/questions/213042/how-do-you-do-exponentiation-in-c
+int power(int base, unsigned int exp) {
+    int i, result = 1;
+    for (i = 0; i < exp; i++)
+        result *= base;
+    return result;
+ }
