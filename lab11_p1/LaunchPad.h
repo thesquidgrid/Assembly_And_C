@@ -270,6 +270,7 @@ void seg7_off(void);
 void seg7_on(uint8_t value, uint8_t seg7_dig);
 void seg7_hex(uint8_t hex, uint8_t seg7_dig);
 
+
 void dipsw_init(void);
 uint8_t dipsw_read(void);
 bool is_pb_down(uint8_t pb_idx);
