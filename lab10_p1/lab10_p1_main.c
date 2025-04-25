@@ -45,6 +45,7 @@ int main(void) {
    UART_init(115200);
 
    lcd_write_string("NAME:");
+   GPIOA->DOUT31_0 + 2;
 
    char currentChar = ' ';
    uint8_t currentPositon = 5;  // Start after "NAME:"

@@ -189,11 +189,6 @@ void spi1_disable(void)
   SPI1->CTL1 &= ~SPI_CTL1_ENABLE_MASK;
 } /* spi1_disable */
 
-void spi1_enable(void)
-{
-  SPI1->CTL1 |= SPI_CTL1_ENABLE_MASK;
-} /* spi1_disable */
-
 
 //-----------------------------------------------------------------------------
 // DESCRIPTION:
